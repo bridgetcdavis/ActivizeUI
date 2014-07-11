@@ -1,0 +1,57 @@
+﻿@using Bootstrap.Controllers
+@using Microsoft.AspNet.Identity
+
+@{
+    ViewBag.Title = "ViewGoals";
+}
+
+<h2>@User.Identity.GetUserName()</h2>
+<h3>@ViewBag.Message</h3>
+
+<div class="navbar navbar-lblue" id="Steps">
+    <div class="navbar-header">
+        @{
+            double steps = double.Parse(GoalController.queryGoals(GoalController.getID(User.Identity.GetUserName()), "StepGoal"));
+        }
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse" background-color="#00AEDD">
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Steps Taken: @steps</a>
+    </div>
+</div>
+
+<div class="navbar navbar-inverse" id="Calories">
+    <div class="navbar-header">
+        @{
+            double cals = double.Parse(GoalController.queryGoals(GoalController.getID(User.Identity.GetUserName()), "CalGoal"));
+        }
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse" background-color="#00AEDD">
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Calories Burned: @cals</a>
+    </div>
+</div>
+
+<div class="navbar navbar-green" id="Minutes">
+    <div class="navbar-header">
+        @{
+            double mins = double.Parse(GoalController.queryGoals(GoalController.getID(User.Identity.GetUserName()), "MinGoal"));
+        }
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Active Minutes: @mins</a>
+    </div>
+</div>
+
+<div class="navbar navbar-purple" id="Miles">
+    <div class="navbar-header">
+        @{
+            double miles = double.Parse(GoalController.queryGoals(GoalController.getID(User.Identity.GetUserName()), "MileGoal"));
+        }
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Active Miles: @miles</a>
+    </div>
+</div>

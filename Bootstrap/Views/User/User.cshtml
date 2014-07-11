@@ -1,0 +1,171 @@
+﻿@using System.Timers
+@using Bootstrap.Controllers
+@using Bootstrap.Models
+@using Microsoft.AspNet.Identity
+@using System;
+@using Timer = System.Timers.Timer
+
+@{
+    ViewBag.Title = "User";
+    ViewBag.Message = "Your Gear information here:";
+    string user = User.Identity.GetUserName();
+    
+    string temp = UserController.queryField(user, "Temperature");
+    string steps = UserController.queryField(user, "Steps");
+    string cals = UserController.queryField(user, "Calories");
+    string mins = UserController.queryField(user, "Minutes");
+    string miles = UserController.queryField(user, "Miles");
+    
+    double goal = 52;
+    string goals = String.Empty;
+}
+
+<h2>@User.Identity.GetUserName()</h2>
+<h3>@ViewBag.Message</h3>
+
+@{
+    if (GoalController.hasGoal(User.Identity.GetUserName()))
+    {
+        <div>
+            @User.Identity.GetUserName() has goals!
+        </div>
+    }
+    else
+    {
+        <div>
+            @User.Identity.GetUserName() does not have goals...using default 52.
+        </div>
+@*        <div>*@
+@*            @UserController.queryTestTimer()*@
+@*        </div>*@
+    }
+    Console.WriteLine("Test");
+}
+
+<div class="navbar navbar-default" id="Temperature">
+    <div class="navbar-header">
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Temperature: @temp</a>
+    </div>
+    <div class="navbar-collapse collapse navbar-responsive-collapse">
+        @{
+            double temps = Double.Parse(temp);
+            if (temps > 100.0)
+            {
+                <i><a class="navbar-brand" href="#">Please stay home today, you seem to be under the weather.</a></i>
+            }
+            Console.WriteLine("Test2");
+        }
+    </div>
+</div>
+
+<div class="navbar navbar-lblue" id="Steps">
+    <div class="navbar-header">
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse" background-color="#00AEDD">
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="http://localhost:9907/User/DailySteps">Steps Taken: @steps</a>
+    </div>
+    <div class="navbar-collapse collapse navbar-responsive-collapse">
+        @{
+            double step = Double.Parse(steps);
+            if (GoalController.hasGoal(user))
+            {
+                goal = Double.Parse(GoalController.queryGoals(GoalController.getID(user), "StepGoal"));
+            }
+            step = goal - step;
+            if (step > 0)
+            {
+                goals = step + " steps left to reach your goal!";
+            }
+            else
+            {
+                goals = "You've reached your goal!";
+            }
+        }
+        <i><a class="navbar-brand">@goals</a></i>
+    </div>
+</div>
+
+<div class="navbar navbar-inverse" id="Calories">
+    <div class="navbar-header">
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse" background-color="#00AEDD">
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="http://localhost:9907/User/DailyCalories">Calories Burned: @cals</a>
+    </div>
+    <div class="navbar-collapse collapse navbar-responsive-collapse">
+        @{
+            double cal = Double.Parse(cals);
+            if (GoalController.hasGoal(user))
+            {
+                goal = Double.Parse(GoalController.queryGoals(GoalController.getID(user), "CalGoal"));
+            }
+            cal = goal - cal;
+            if (cal > 0)
+            {
+                <i><a class="navbar-brand" href="#">@cal calories left to reach your goal!</a></i>
+            }
+            else
+            {
+                <i><a class="navbar-brand" href="#">You've reached your goal!</a></i>
+            }
+        }
+    </div>
+</div>
+
+<div class="navbar navbar-green" id="Minutes">
+    <div class="navbar-header">
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="http://localhost:9907/User/DailyMinutes">Active Minutes: @mins</a>
+    </div>
+    <div class="navbar-collapse collapse navbar-responsive-collapse">
+        @{
+            double min = Double.Parse(mins);
+            if (GoalController.hasGoal(user))
+            {
+                goal = Double.Parse(GoalController.queryGoals(GoalController.getID(user), "MinGoal"));
+            }
+            min = goal - min;
+            if (min > 0)
+            {
+                <i><a class="navbar-brand" href="#">@min minutes left to reach your goal!</a></i>
+            }
+            else
+            {
+                <i><a class="navbar-brand" href="#">You've reached your goal!</a></i>
+            }
+        }
+    </div>
+</div>
+
+<div class="navbar navbar-purple" id="Miles">
+    <div class="navbar-header">
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="http://localhost:9907/User/DailyMiles">Active Miles: @miles</a>
+    </div>
+    <div class="navbar-collapse collapse navbar-responsive-collapse">
+        @{
+            double mi = Double.Parse(miles);
+            if (GoalController.hasGoal(user))
+            {
+                goal = Double.Parse(GoalController.queryGoals(GoalController.getID(user), "MileGoal"));
+            }
+            mi = goal - mi;
+            if (mi > 0)
+            {
+                <i><a class="navbar-brand" href="#">@mi miles left to reach your goal!</a></i>
+            }
+            else
+            {
+                <i><a class="navbar-brand" href="#">You've reached your goal!</a></i>
+            }
+        }
+    </div>
+</div>
