@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<serviceModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Activize" generation="1" functional="0" release="0" Id="35af2566-f4ec-4f0a-a203-508200732a0e" dslVersion="1.2.0.0" xmlns="http://schemas.microsoft.com/dsltools/RDSM">
+<serviceModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Activize" generation="1" functional="0" release="0" Id="d60a4bdd-c28b-4f89-865b-809cd2f3c77c" dslVersion="1.2.0.0" xmlns="http://schemas.microsoft.com/dsltools/RDSM">
   <groups>
     <group name="ActivizeGroup" generation="1" functional="0" release="0">
       <componentports>
@@ -70,9 +70,9 @@
     </group>
   </groups>
   <implements>
-    <implementation Id="a1db1225-609d-4de9-9487-4a9403ff62fd" ref="Microsoft.RedDog.Contract\ServiceContract\ActivizeContract@ServiceDefinition">
+    <implementation Id="8a0acac0-301c-49f8-bb86-7a0c2b5bfbf3" ref="Microsoft.RedDog.Contract\ServiceContract\ActivizeContract@ServiceDefinition">
       <interfacereferences>
-        <interfaceReference Id="a7d786b0-28b9-4373-90ee-77516995f4bc" ref="Microsoft.RedDog.Contract\Interface\Bootstrap:Endpoint1@ServiceDefinition">
+        <interfaceReference Id="879f8b4e-17f8-42cc-871c-0d84f44d26e6" ref="Microsoft.RedDog.Contract\Interface\Bootstrap:Endpoint1@ServiceDefinition">
           <inPort>
             <inPortMoniker name="/Activize/ActivizeGroup/Bootstrap:Endpoint1" />
           </inPort>

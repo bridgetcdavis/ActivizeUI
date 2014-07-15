@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Timers;
 using System.Web;
@@ -57,9 +58,12 @@ namespace Bootstrap.Controllers
         private void OnTimedEvent(object source, ElapsedEventArgs e)
         {
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder["Data Source"] = "(local)";
-            builder["integrated Security"] = true;
-            builder["Initial Catalog"] = "ActivizeDB";
+            builder.DataSource = "tcp:houhwxrzrr.database.windows.net";
+            builder.InitialCatalog = "ActivizeDB";
+            builder.Encrypt = true;
+            builder.TrustServerCertificate = false;
+            builder.UserID = "afadmin@houhwxrzrr";
+            builder.Password = "pass@word1";
 
             SqlConnection sqlConnection = new SqlConnection(builder.ConnectionString);
 
@@ -146,13 +150,15 @@ namespace Bootstrap.Controllers
         public static string queryField(string name, string field)
         {
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder["Data Source"] = "(local)";
-            builder["integrated Security"] = true;
-            builder["Initial Catalog"] = "Test";
+            builder.DataSource = "tcp:houhwxrzrr.database.windows.net";
+            builder.InitialCatalog = "ActivizeDB";
+            builder.Encrypt = true;
+            builder.TrustServerCertificate = false;
+            builder.UserID = "afadmin@houhwxrzrr";
+            builder.Password = "pass@word1";
 
             SqlConnection sqlConnection = new SqlConnection(builder.ConnectionString);
             sqlConnection.Open();
-            DateTime now = DateTime.Now;
             string query =
                 String.Format(
                     "SELECT [Values] FROM [dbo].[Daily] WHERE " +
@@ -182,9 +188,12 @@ namespace Bootstrap.Controllers
             int newCount = count;
 
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder["Data Source"] = "(local)";
-            builder["integrated Security"] = true;
-            builder["Initial Catalog"] = "Test";
+            builder.DataSource = "tcp:houhwxrzrr.database.windows.net";
+            builder.InitialCatalog = "ActivizeDB";
+            builder.Encrypt = true;
+            builder.TrustServerCertificate = false;
+            builder.UserID = "afadmin@houhwxrzrr";
+            builder.Password = "pass@word1";
 
             SqlConnection sqlConnection = new SqlConnection(builder.ConnectionString);
             sqlConnection.Open();
@@ -225,9 +234,12 @@ namespace Bootstrap.Controllers
 
 
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder["Data Source"] = "(local)";
-            builder["integrated Security"] = true;
-            builder["Initial Catalog"] = "Test";
+            builder.DataSource = "tcp:houhwxrzrr.database.windows.net";
+            builder.InitialCatalog = "ActivizeDB";
+            builder.Encrypt = true;
+            builder.TrustServerCertificate = false;
+            builder.UserID = "afadmin@houhwxrzrr";
+            builder.Password = "pass@word1";
 
             // SqlConnection sqlConnection = new SqlConnection(builder.ConnectionString);
 
@@ -245,7 +257,7 @@ namespace Bootstrap.Controllers
                         SQLsForCustomerQuery,
                         new SqlParameter("start", start),
                         new SqlParameter("end", end),
-                        new SqlParameter("namespace", "Beth"));
+                        new SqlParameter("namespace", "1112"));
                 });
             }
 
@@ -344,7 +356,7 @@ namespace Bootstrap.Controllers
 //                        SQLsForCustomerQuery,
 //                        new SqlParameter("start", start),
 //                        new SqlParameter("end", end),
-//                        new SqlParameter("namespace", "Beth"));
+//                        new SqlParameter("namespace", "1112"));
 //                });
 //            }
 //
@@ -391,6 +403,7 @@ namespace Bootstrap.Controllers
 //            return result.ToString();
 //        }
 
+
         public string getStepHistory()
         {
             DateTime date = DateTime.Now;
@@ -400,9 +413,12 @@ namespace Bootstrap.Controllers
 
 
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder["Data Source"] = "(local)";
-            builder["integrated Security"] = true;
-            builder["Initial Catalog"] = "Test";
+            builder.DataSource = "tcp:houhwxrzrr.database.windows.net";
+            builder.InitialCatalog = "ActivizeDB";
+            builder.Encrypt = true;
+            builder.TrustServerCertificate = false;
+            builder.UserID = "afadmin@houhwxrzrr";
+            builder.Password = "pass@word1";
 
             List<NamespaceSQL> sqlResult;
 
@@ -415,7 +431,7 @@ namespace Bootstrap.Controllers
                         SQLsForCustomerQuery,
                         new SqlParameter("start", start),
                         new SqlParameter("end", end),
-                        new SqlParameter("namespace", "Beth"));
+                        new SqlParameter("namespace", "1112"));
                 });
                 sqlConn.Close();
             }
@@ -453,9 +469,12 @@ namespace Bootstrap.Controllers
 
 
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder["Data Source"] = "(local)";
-            builder["integrated Security"] = true;
-            builder["Initial Catalog"] = "Test";
+            builder.DataSource = "tcp:houhwxrzrr.database.windows.net";
+            builder.InitialCatalog = "ActivizeDB";
+            builder.Encrypt = true;
+            builder.TrustServerCertificate = false;
+            builder.UserID = "afadmin@houhwxrzrr";
+            builder.Password = "pass@word1";
 
             List<NamespaceSQL> sqlResult;
 
@@ -468,7 +487,7 @@ namespace Bootstrap.Controllers
                         SQLsForCustomerQuery,
                         new SqlParameter("start", start),
                         new SqlParameter("end", end),
-                        new SqlParameter("namespace", "Beth"));
+                        new SqlParameter("namespace", "1112"));
                 });
                 sqlConn.Close();
             }
@@ -506,9 +525,12 @@ namespace Bootstrap.Controllers
 
 
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder["Data Source"] = "(local)";
-            builder["integrated Security"] = true;
-            builder["Initial Catalog"] = "Test";
+            builder.DataSource = "tcp:houhwxrzrr.database.windows.net";
+            builder.InitialCatalog = "ActivizeDB";
+            builder.Encrypt = true;
+            builder.TrustServerCertificate = false;
+            builder.UserID = "afadmin@houhwxrzrr";
+            builder.Password = "pass@word1";
 
             List<NamespaceSQL> sqlResult;
 
@@ -521,7 +543,7 @@ namespace Bootstrap.Controllers
                         SQLsForCustomerQuery,
                         new SqlParameter("start", start),
                         new SqlParameter("end", end),
-                        new SqlParameter("namespace", "Beth"));
+                        new SqlParameter("namespace", "1112"));
                 });
                 sqlConn.Close();
             }
@@ -559,9 +581,12 @@ namespace Bootstrap.Controllers
 
 
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder["Data Source"] = "(local)";
-            builder["integrated Security"] = true;
-            builder["Initial Catalog"] = "Test";
+            builder.DataSource = "tcp:houhwxrzrr.database.windows.net";
+            builder.InitialCatalog = "ActivizeDB";
+            builder.Encrypt = true;
+            builder.TrustServerCertificate = false;
+            builder.UserID = "afadmin@houhwxrzrr";
+            builder.Password = "pass@word1";
 
             List<NamespaceSQL> sqlResult;
 
@@ -574,7 +599,7 @@ namespace Bootstrap.Controllers
                         SQLsForCustomerQuery,
                         new SqlParameter("start", start),
                         new SqlParameter("end", end),
-                        new SqlParameter("namespace", "Beth"));
+                        new SqlParameter("namespace", "1112"));
                 });
                 sqlConn.Close();
             }

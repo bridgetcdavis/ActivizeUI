@@ -20,7 +20,7 @@ function refresh() {
 
     $("#userDailySteps").html('loading...');
     plotCharts("userDailySteps", "/User/getStepHistory", plotKPI, {
-        metric: $("#metric").val()
+//        metric: $("#metric").val()
     });
 
 }

@@ -41,9 +41,12 @@ namespace Bootstrap.Controllers
                 ActionResult action;
 
                 SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-                builder["Data Source"] = "(local)";
-                builder["integrated Security"] = true;
-                builder["Initial Catalog"] = "Test";
+                builder.DataSource = "tcp:houhwxrzrr.database.windows.net";
+                builder.InitialCatalog = "ActivizeDB";
+                builder.Encrypt = true;
+                builder.TrustServerCertificate = false;
+                builder.UserID = "afadmin@houhwxrzrr";
+                builder.Password = "pass@word1";
 
                 SqlConnection sqlConnection = new SqlConnection(builder.ConnectionString);
                 
@@ -97,9 +100,12 @@ namespace Bootstrap.Controllers
         public static string queryGoals(string id, string field)
         {
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder["Data Source"] = "(local)";
-            builder["integrated Security"] = true;
-            builder["Initial Catalog"] = "Test";
+            builder.DataSource = "tcp:houhwxrzrr.database.windows.net";
+            builder.InitialCatalog = "ActivizeDB";
+            builder.Encrypt = true;
+            builder.TrustServerCertificate = false;
+            builder.UserID = "afadmin@houhwxrzrr";
+            builder.Password = "pass@word1";
 
             SqlConnection sqlConnection = new SqlConnection(builder.ConnectionString);
             sqlConnection.Open();
@@ -129,9 +135,12 @@ namespace Bootstrap.Controllers
         public static string getID(string user)
         {
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder["Data Source"] = "(local)";
-            builder["integrated Security"] = true;
-            builder["Initial Catalog"] = "Test";
+            builder.DataSource = "tcp:houhwxrzrr.database.windows.net";
+            builder.InitialCatalog = "ActivizeDB";
+            builder.Encrypt = true;
+            builder.TrustServerCertificate = false;
+            builder.UserID = "afadmin@houhwxrzrr";
+            builder.Password = "pass@word1";
 
             SqlConnection sqlConnection = new SqlConnection(builder.ConnectionString);
             sqlConnection.Open();
@@ -161,9 +170,12 @@ namespace Bootstrap.Controllers
         public static bool hasGoal(string user)
         {
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder["Data Source"] = "(local)";
-            builder["integrated Security"] = true;
-            builder["Initial Catalog"] = "Test";
+            builder.DataSource = "tcp:houhwxrzrr.database.windows.net";
+            builder.InitialCatalog = "ActivizeDB";
+            builder.Encrypt = true;
+            builder.TrustServerCertificate = false;
+            builder.UserID = "afadmin@houhwxrzrr";
+            builder.Password = "pass@word1";
 
             SqlConnection sqlConnection = new SqlConnection(builder.ConnectionString);
             sqlConnection.Open();
