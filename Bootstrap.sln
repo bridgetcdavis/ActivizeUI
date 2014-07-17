@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bootstrap", "Bootstrap\Bootstrap.csproj", "{D6EF23DC-6303-459A-A7BB-A044A8189D1E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Activize", "Bootstrap\Activize.csproj", "{D6EF23DC-6303-459A-A7BB-A044A8189D1E}"
 EndProject
-Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "Activize", "Activize\Activize.ccproj", "{68EEA879-D699-43A9-9C21-4EA0E5981AD5}"
+Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "ActivizeWeb", "Activize\ActivizeWeb.ccproj", "{68EEA879-D699-43A9-9C21-4EA0E5981AD5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

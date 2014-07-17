@@ -11,7 +11,7 @@
     <RootNamespace>Activize</RootNamespace>
     <AssemblyName>Activize</AssemblyName>
     <StartDevelopmentStorage>True</StartDevelopmentStorage>
-    <Name>Activize</Name>
+    <Name>ActivizeWeb</Name>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -37,22 +37,21 @@
     <ServiceConfiguration Include="ServiceConfiguration.Cloud.cscfg" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Bootstrap\Bootstrap.csproj">
-      <Name>Bootstrap</Name>
+    <Folder Include="ActivizeContent" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ActivizeContent\diagnostics.wadcfg">
+      <SubType>Content</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Bootstrap\Activize.csproj">
+      <Name>Activize</Name>
       <Project>{d6ef23dc-6303-459a-a7bb-a044a8189d1e}</Project>
       <Private>True</Private>
       <RoleType>Web</RoleType>
-      <RoleName>Bootstrap</RoleName>
-      <UpdateDiagnosticsConnectionStringOnPublish>True</UpdateDiagnosticsConnectionStringOnPublish>
+      <RoleName>Activize</RoleName>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BootstrapContent\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="BootstrapContent\diagnostics.wadcfg">
-      <SubType>Content</SubType>
-    </Content>
   </ItemGroup>
   <!-- Import the target files for this project template -->
   <PropertyGroup>
