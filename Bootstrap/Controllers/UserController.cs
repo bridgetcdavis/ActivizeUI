@@ -58,12 +58,7 @@ namespace Bootstrap.Controllers
         private void OnTimedEvent(object source, ElapsedEventArgs e)
         {
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder.DataSource = "tcp:houhwxrzrr.database.windows.net";
-            builder.InitialCatalog = "ActivizeDB";
-            builder.Encrypt = true;
-            builder.TrustServerCertificate = false;
-            builder.UserID = "afadmin@houhwxrzrr";
-            builder.Password = "pass@word1";
+
 
             SqlConnection sqlConnection = new SqlConnection(builder.ConnectionString);
 
@@ -150,12 +145,7 @@ namespace Bootstrap.Controllers
         public static string queryField(string name, string field)
         {
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder.DataSource = "tcp:houhwxrzrr.database.windows.net";
-            builder.InitialCatalog = "ActivizeDB";
-            builder.Encrypt = true;
-            builder.TrustServerCertificate = false;
-            builder.UserID = "afadmin@houhwxrzrr";
-            builder.Password = "pass@word1";
+
 
             SqlConnection sqlConnection = new SqlConnection(builder.ConnectionString);
             sqlConnection.Open();
@@ -188,12 +178,7 @@ namespace Bootstrap.Controllers
             int newCount = count;
 
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder.DataSource = "tcp:houhwxrzrr.database.windows.net";
-            builder.InitialCatalog = "ActivizeDB";
-            builder.Encrypt = true;
-            builder.TrustServerCertificate = false;
-            builder.UserID = "afadmin@houhwxrzrr";
-            builder.Password = "pass@word1";
+
 
             SqlConnection sqlConnection = new SqlConnection(builder.ConnectionString);
             sqlConnection.Open();
@@ -234,12 +219,7 @@ namespace Bootstrap.Controllers
 
 
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder.DataSource = "tcp:houhwxrzrr.database.windows.net";
-            builder.InitialCatalog = "ActivizeDB";
-            builder.Encrypt = true;
-            builder.TrustServerCertificate = false;
-            builder.UserID = "afadmin@houhwxrzrr";
-            builder.Password = "pass@word1";
+
 
             // SqlConnection sqlConnection = new SqlConnection(builder.ConnectionString);
 
@@ -413,12 +393,7 @@ namespace Bootstrap.Controllers
 
 
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder.DataSource = "tcp:houhwxrzrr.database.windows.net";
-            builder.InitialCatalog = "ActivizeDB";
-            builder.Encrypt = true;
-            builder.TrustServerCertificate = false;
-            builder.UserID = "afadmin@houhwxrzrr";
-            builder.Password = "pass@word1";
+            
 
             List<NamespaceSQL> sqlResult;
 
@@ -469,12 +444,7 @@ namespace Bootstrap.Controllers
 
 
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder.DataSource = "tcp:houhwxrzrr.database.windows.net";
-            builder.InitialCatalog = "ActivizeDB";
-            builder.Encrypt = true;
-            builder.TrustServerCertificate = false;
-            builder.UserID = "afadmin@houhwxrzrr";
-            builder.Password = "pass@word1";
+
 
             List<NamespaceSQL> sqlResult;
 
@@ -525,12 +495,7 @@ namespace Bootstrap.Controllers
 
 
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder.DataSource = "tcp:houhwxrzrr.database.windows.net";
-            builder.InitialCatalog = "ActivizeDB";
-            builder.Encrypt = true;
-            builder.TrustServerCertificate = false;
-            builder.UserID = "afadmin@houhwxrzrr";
-            builder.Password = "pass@word1";
+
 
             List<NamespaceSQL> sqlResult;
 
@@ -581,12 +546,7 @@ namespace Bootstrap.Controllers
 
 
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder.DataSource = "tcp:houhwxrzrr.database.windows.net";
-            builder.InitialCatalog = "ActivizeDB";
-            builder.Encrypt = true;
-            builder.TrustServerCertificate = false;
-            builder.UserID = "afadmin@houhwxrzrr";
-            builder.Password = "pass@word1";
+
 
             List<NamespaceSQL> sqlResult;
 
