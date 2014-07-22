@@ -24,6 +24,8 @@ namespace Bootstrap.Controllers
 {
     public class UserController : Controller
     {
+        public static string currentUserID;
+        public static string currentUserName;
         private const string SQLsForCustomerQuery = @"
             SELECT
             [Timestamp],
@@ -55,23 +57,29 @@ namespace Bootstrap.Controllers
             return View();
         }
 
-        private void OnTimedEvent(object source, ElapsedEventArgs e)
-        {
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+        //private void OnTimedEvent(object source, ElapsedEventArgs e)
+        //{
+        //    string conString;
 
+        //    ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
+        //    if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
+        //    {
+        //        throw new Exception("Fatal error: missing connection string in web.config file");
+        //    }
+        //    conString = mySetting.ConnectionString;
 
-            SqlConnection sqlConnection = new SqlConnection(builder.ConnectionString);
+        //    SqlConnection sqlConnection = new SqlConnection(conString);
 
-            sqlConnection.Open();
-            SqlCommand cmd = sqlConnection.CreateCommand();
+        //    sqlConnection.Open();
+        //    SqlCommand cmd = sqlConnection.CreateCommand();
 
-            cmd.CommandText = String.Format(
-                            "INSERT INTO [dbo].[TestTimer] " +
-                            "(Count, Timestamp) " +
-                            "VALUES ({0}, {1})", count++, DateTime.Now);
-            cmd.ExecuteNonQuery();
+        //    cmd.CommandText = String.Format(
+        //                    "INSERT INTO [dbo].[TestTimer] " +
+        //                    "(Count, Timestamp) " +
+        //                    "VALUES ({0}, {1})", count++, DateTime.Now);
+        //    cmd.ExecuteNonQuery();
 
-        }
+        //}
 
         // GET: /User/DailySteps
         public ActionResult DailySteps()
@@ -144,10 +152,16 @@ namespace Bootstrap.Controllers
 
         public static string queryField(string name, string field)
         {
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+            string conString;
 
+            ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
+            if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
+            {
+                throw new Exception("Fatal error: missing connection string in web.config file");
+            }
+            conString = mySetting.ConnectionString;
 
-            SqlConnection sqlConnection = new SqlConnection(builder.ConnectionString);
+            SqlConnection sqlConnection = new SqlConnection(conString);
             sqlConnection.Open();
             string query =
                 String.Format(
@@ -172,15 +186,27 @@ namespace Bootstrap.Controllers
             return cols;
         }
 
+        public static string setUserID(string username)
+        {
+            currentUserName = username;
+            currentUserID = getId(username);
+            return "";
+        }
 
         public static string queryTestTimer()
         {
             int newCount = count;
 
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+            string conString;
 
+            ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
+            if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
+            {
+                throw new Exception("Fatal error: missing connection string in web.config file");
+            }
+            conString = mySetting.ConnectionString;
 
-            SqlConnection sqlConnection = new SqlConnection(builder.ConnectionString);
+            SqlConnection sqlConnection = new SqlConnection(conString);
             sqlConnection.Open();
             string query = "SELECT * FROM [dbo].[TestTimer]";
             SqlCommand queryCommand = new SqlCommand(query, sqlConnection);
@@ -201,6 +227,66 @@ namespace Bootstrap.Controllers
             return cols;
         }
 
+        public static string getId(string user)
+        {
+            string conString;
+
+            ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
+            if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
+            {
+                throw new Exception("Fatal error: missing connection string in web.config file");
+            }
+            conString = mySetting.ConnectionString;
+
+            SqlConnection sqlConnection = new SqlConnection(conString);
+            sqlConnection.Open();
+            string query = String.Format("SELECT [Device Id] FROM [dbo].[Daily] WHERE [Name] = '{0}'", user);
+            string cols = string.Empty;
+            SqlCommand queryCommand = new SqlCommand(query, sqlConnection);
+            try
+            {
+                SqlDataReader queryReader = queryCommand.ExecuteReader();
+                DataTable dataTable = new DataTable();
+                dataTable.Load(queryReader);
+
+                cols += dataTable.Rows[0][dataTable.Columns[0].ColumnName];
+            }
+            catch
+            {
+                cols += "Not Found";
+            }
+            finally
+            {
+                sqlConnection.Close();
+            }
+
+            return cols;
+        }
+
+        public string getUserName(string id)
+        {
+            ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
+            if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
+            {
+                throw new Exception("Fatal error: missing connection string in web.config file");
+            }
+            string conString = mySetting.ConnectionString;
+
+            SqlConnection sqlConnection = new SqlConnection(conString);
+
+            sqlConnection.Open();
+            string query = String.Format("SELECT [Name] FROM [dbo].[Daily] WHERE [Device ID] = {0}", id);
+            string cols = string.Empty;
+            SqlCommand queryCommand = new SqlCommand(query, sqlConnection);
+
+            SqlDataReader queryReader = queryCommand.ExecuteReader();
+            DataTable dataTable = new DataTable();
+            dataTable.Load(queryReader);
+
+            cols += dataTable.Rows[0][dataTable.Columns[0].ColumnName];
+
+            return cols;
+        }
 
         public static string getSQLHistory(DateTime? from, DateTime? to, string ns)
         {
@@ -218,15 +304,21 @@ namespace Bootstrap.Controllers
             DateTime start = date.AddDays(-30).Date + ts;
 
 
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+            string conString;
 
+            ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
+            if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
+            {
+                throw new Exception("Fatal error: missing connection string in web.config file");
+            }
+            conString = mySetting.ConnectionString;
 
-            // SqlConnection sqlConnection = new SqlConnection(builder.ConnectionString);
+            //SqlConnection sqlConnection = new SqlConnection(conString);
 
             // string connStr = ConfigurationManager.ConnectionStrings["MessagingSQL"].ConnectionString;
             List<NamespaceSQL> sqlResult;
 
-            using (SqlConnection sqlConn = new SqlConnection(builder.ConnectionString))
+            using (SqlConnection sqlConn = new SqlConnection(conString))
             {
                 sqlResult = SqlHelpers.RetryExecute<List<NamespaceSQL>>(() =>
                 {
@@ -320,10 +412,16 @@ namespace Bootstrap.Controllers
 //            DateTime start = date.AddDays(-30).Date + ts;
 //
 //
-//            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-//            builder["Data Source"] = "(local)";
-//            builder["integrated Security"] = true;
-//            builder["Initial Catalog"] = "Test";
+//            string conString;
+//
+//            ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
+//            if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
+//            {
+//                throw new Exception("Fatal error: missing connection string in web.config file");
+//            }
+//            conString = mySetting.ConnectionString;
+
+//            SqlConnection sqlConnection = new SqlConnection(conString);
 //
 //            List<NamespaceSQL> sqlResult;
 //
@@ -392,12 +490,18 @@ namespace Bootstrap.Controllers
             DateTime start = date.AddDays(-30).Date + ts;
 
 
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            
+            string conString;
+
+            ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
+            if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
+            {
+                throw new Exception("Fatal error: missing connection string in web.config file");
+            }
+            conString = mySetting.ConnectionString;            
 
             List<NamespaceSQL> sqlResult;
 
-            using (SqlConnection sqlConn = new SqlConnection(builder.ConnectionString))
+            using (SqlConnection sqlConn = new SqlConnection(conString))
             {
                 sqlResult = SqlHelpers.RetryExecute<List<NamespaceSQL>>(() =>
                 {
@@ -406,7 +510,7 @@ namespace Bootstrap.Controllers
                         SQLsForCustomerQuery,
                         new SqlParameter("start", start),
                         new SqlParameter("end", end),
-                        new SqlParameter("namespace", "1112"));
+                        new SqlParameter("namespace", currentUserID));
                 });
                 sqlConn.Close();
             }
@@ -428,7 +532,7 @@ namespace Bootstrap.Controllers
             StepsForNameSpace.Add(stepNamespaces);
 
             JObject stepResult = new JObject();
-            stepResult["NamespaceName"] = sqlResult[0].Id;
+            stepResult["NamespaceName"] = currentUserName;
             stepResult["ScaleUnit"] = "Steps";
             stepResult["NamespaceSQLs"] = StepsForNameSpace;
 
@@ -443,12 +547,18 @@ namespace Bootstrap.Controllers
             DateTime start = date.AddDays(-30).Date + ts;
 
 
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+            string conString;
 
+            ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
+            if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
+            {
+                throw new Exception("Fatal error: missing connection string in web.config file");
+            }
+            conString = mySetting.ConnectionString;
 
             List<NamespaceSQL> sqlResult;
 
-            using (SqlConnection sqlConn = new SqlConnection(builder.ConnectionString))
+            using (SqlConnection sqlConn = new SqlConnection(conString))
             {
                 sqlResult = SqlHelpers.RetryExecute<List<NamespaceSQL>>(() =>
                 {
@@ -457,7 +567,7 @@ namespace Bootstrap.Controllers
                         SQLsForCustomerQuery,
                         new SqlParameter("start", start),
                         new SqlParameter("end", end),
-                        new SqlParameter("namespace", "1112"));
+                        new SqlParameter("namespace", currentUserID));
                 });
                 sqlConn.Close();
             }
@@ -479,7 +589,7 @@ namespace Bootstrap.Controllers
             CalsForNameSpace.Add(calNamespaces);
 
             JObject calResult = new JObject();
-            calResult["NamespaceName"] = sqlResult[0].Id;
+            calResult["NamespaceName"] = currentUserName;
             calResult["ScaleUnit"] = "Calories";
             calResult["NamespaceSQLs"] = CalsForNameSpace;
 
@@ -494,12 +604,18 @@ namespace Bootstrap.Controllers
             DateTime start = date.AddDays(-30).Date + ts;
 
 
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+            string conString;
 
+            ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
+            if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
+            {
+                throw new Exception("Fatal error: missing connection string in web.config file");
+            }
+            conString = mySetting.ConnectionString;
 
             List<NamespaceSQL> sqlResult;
 
-            using (SqlConnection sqlConn = new SqlConnection(builder.ConnectionString))
+            using (SqlConnection sqlConn = new SqlConnection(conString))
             {
                 sqlResult = SqlHelpers.RetryExecute<List<NamespaceSQL>>(() =>
                 {
@@ -508,7 +624,7 @@ namespace Bootstrap.Controllers
                         SQLsForCustomerQuery,
                         new SqlParameter("start", start),
                         new SqlParameter("end", end),
-                        new SqlParameter("namespace", "1112"));
+                        new SqlParameter("namespace", currentUserID));
                 });
                 sqlConn.Close();
             }
@@ -530,7 +646,7 @@ namespace Bootstrap.Controllers
             minsForNameSpace.Add(minNamespaces);
 
             JObject minResult = new JObject();
-            minResult["NamespaceName"] = sqlResult[0].Id;
+            minResult["NamespaceName"] = currentUserName;
             minResult["ScaleUnit"] = "Minutes";
             minResult["NamespaceSQLs"] = minsForNameSpace;
 
@@ -545,12 +661,18 @@ namespace Bootstrap.Controllers
             DateTime start = date.AddDays(-30).Date + ts;
 
 
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+            string conString;
 
+            ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
+            if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
+            {
+                throw new Exception("Fatal error: missing connection string in web.config file");
+            }
+            conString = mySetting.ConnectionString;
 
             List<NamespaceSQL> sqlResult;
 
-            using (SqlConnection sqlConn = new SqlConnection(builder.ConnectionString))
+            using (SqlConnection sqlConn = new SqlConnection(conString))
             {
                 sqlResult = SqlHelpers.RetryExecute<List<NamespaceSQL>>(() =>
                 {
@@ -559,7 +681,7 @@ namespace Bootstrap.Controllers
                         SQLsForCustomerQuery,
                         new SqlParameter("start", start),
                         new SqlParameter("end", end),
-                        new SqlParameter("namespace", "1112"));
+                        new SqlParameter("namespace", currentUserID));
                 });
                 sqlConn.Close();
             }
@@ -581,7 +703,7 @@ namespace Bootstrap.Controllers
             MilesForNameSpace.Add(mileNamespaces);
 
             JObject mileResult = new JObject();
-            mileResult["NamespaceName"] = sqlResult[0].Id;
+            mileResult["NamespaceName"] = currentUserName;
             mileResult["ScaleUnit"] = "Miles";
             mileResult["NamespaceSQLs"] = MilesForNameSpace;
 

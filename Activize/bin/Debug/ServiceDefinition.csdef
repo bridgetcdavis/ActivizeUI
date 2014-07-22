@@ -9,7 +9,7 @@
   **********************************************************************************************
 -->
 <ServiceDefinition name="Activize" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2014-01.2.3">
-  <WebRole name="Bootstrap" vmsize="Small">
+  <WebRole name="Activize" vmsize="Small">
     <Sites>
       <Site name="Web">
         <Bindings>
@@ -25,7 +25,7 @@
     </Imports>
     <Contents>
       <Content destination=".\">
-        <SourceDirectory path="C:\Users\t-bdavis\Documents\Visual Studio 2013\Projects\Bootstrap\Activize\rcf\Debug\BootstrapContent\" />
+        <SourceDirectory path="C:\Users\t-bdavis\Documents\Visual Studio 2013\Projects\Bootstrap\Activize\rcf\Debug\ActivizeContent\" />
       </Content>
     </Contents>
   </WebRole>

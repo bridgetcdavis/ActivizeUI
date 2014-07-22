@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using Bootstrap.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Configuration;
 
 namespace Bootstrap.Controllers
 {
@@ -37,13 +38,18 @@ namespace Bootstrap.Controllers
         {
             if (ModelState.IsValid)
             {
+                string conString;
 
                 ActionResult action;
 
-                SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+                ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
+                if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
+                {
+                    throw new Exception("Fatal error: missing connection string in web.config file");
+                }
+                conString = mySetting.ConnectionString;
 
-
-                SqlConnection sqlConnection = new SqlConnection(builder.ConnectionString);
+                SqlConnection sqlConnection = new SqlConnection(conString);
                 
                 
                 String id = getID(User.Identity.GetUserName());
@@ -94,10 +100,16 @@ namespace Bootstrap.Controllers
 
         public static string queryGoals(string id, string field)
         {
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+            string conString;
 
+            ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
+            if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
+            {
+                throw new Exception("Fatal error: missing connection string in web.config file");
+            }
+            conString = mySetting.ConnectionString;
 
-            SqlConnection sqlConnection = new SqlConnection(builder.ConnectionString);
+            SqlConnection sqlConnection = new SqlConnection(conString);
             sqlConnection.Open();
             string query = String.Format("SELECT [{0}] FROM [dbo].[UserGoals] WHERE [Id] = '{1}'", field, id);
             string cols = string.Empty;
@@ -124,10 +136,16 @@ namespace Bootstrap.Controllers
 
         public static string getID(string user)
         {
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+            string conString;
 
+            ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
+            if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
+            {
+                throw new Exception("Fatal error: missing connection string in web.config file");
+            }
+            conString = mySetting.ConnectionString;
 
-            SqlConnection sqlConnection = new SqlConnection(builder.ConnectionString);
+            SqlConnection sqlConnection = new SqlConnection(conString);
             sqlConnection.Open();
             string query = String.Format("SELECT [Id] FROM [dbo].[AspNetUsers] WHERE [UserName] = '{0}'", user);
             string cols = string.Empty;
@@ -154,10 +172,16 @@ namespace Bootstrap.Controllers
 
         public static bool hasGoal(string user)
         {
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+            string conString;
 
+            ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
+            if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
+            {
+                throw new Exception("Fatal error: missing connection string in web.config file");
+            }
+            conString = mySetting.ConnectionString;
 
-            SqlConnection sqlConnection = new SqlConnection(builder.ConnectionString);
+            SqlConnection sqlConnection = new SqlConnection(conString);
             sqlConnection.Open();
             string query = String.Format("SELECT * FROM [dbo].[UserGoals] WHERE [Id] = '{0}'", getID(user));
             string cols = String.Empty;
