@@ -19,6 +19,18 @@
     <hr />
     @Html.ValidationSummary()
     <div class="form-group">
+        @Html.LabelFor(m => m.RunStepGoal, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.RunStepGoal, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.WalkStepGoal, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.WalkStepGoal, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
         @Html.LabelFor(m => m.StepGoal, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
             @Html.TextBoxFor(m => m.StepGoal, new { @class = "form-control" })
@@ -31,15 +43,9 @@
         </div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.MinGoal, new { @class = "col-md-2 control-label" })
+        @Html.LabelFor(m => m.DistGoal, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
-            @Html.TextBoxFor(m => m.MinGoal, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.MileGoal, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.MileGoal, new { @class = "form-control" })
+            @Html.TextBoxFor(m => m.DistGoal, new { @class = "form-control" })
         </div>
     </div>
     <div class="form-group">

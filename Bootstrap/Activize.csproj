@@ -208,7 +208,6 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="connection.config" />
     <None Include="Scripts\jquery-1.10.2-vsdoc.js" />
     <Content Include="Scripts\commonCharting.js" />
     <Content Include="Scripts\highcharts-more.js" />
@@ -224,9 +223,10 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\UserDailyCalories.js" />
-    <Content Include="Scripts\UserDailyMiles.js" />
-    <Content Include="Scripts\UserDailyMinutes.js" />
-    <Content Include="Scripts\UserDailySteps.js" />
+    <Content Include="Scripts\UserDailyDistance.js" />
+    <Content Include="Scripts\UserDailyRunSteps.js" />
+    <Content Include="Scripts\UserDailyWalkSteps.js" />
+    <Content Include="Scripts\UserDailyTotalSteps.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -259,10 +259,11 @@
     <Content Include="Views\User\User.cshtml" />
     <Content Include="Views\Goal\Goals.cshtml" />
     <Content Include="Views\Goal\ViewGoals.cshtml" />
-    <Content Include="Views\User\DailySteps.cshtml" />
+    <Content Include="Views\User\DailyTotalSteps.cshtml" />
     <Content Include="Views\User\DailyCalories.cshtml" />
-    <Content Include="Views\User\DailyMinutes.cshtml" />
-    <Content Include="Views\User\DailyMiles.cshtml" />
+    <Content Include="Views\User\DailyRunSteps.cshtml" />
+    <Content Include="Views\User\DailyDistance.cshtml" />
+    <Content Include="Views\User\DailyWalkSteps.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

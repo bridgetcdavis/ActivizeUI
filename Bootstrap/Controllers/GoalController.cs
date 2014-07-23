@@ -20,7 +20,6 @@ namespace Bootstrap.Controllers
         // GET: /Goal/
         public ActionResult Goals()
         {
-        //    ViewBag.Id = "3bd18fc4-2c3c-4dd2-b835-3022b6a82fda";
             return View();
         }
 
@@ -55,8 +54,9 @@ namespace Bootstrap.Controllers
                 String id = getID(User.Identity.GetUserName());
                 Double stepGoal = model.StepGoal;
                 Double calGoal = model.CalGoal;
-                Double minGoal = model.MinGoal;
-                Double mileGoal = model.MileGoal;
+                Double walkGoal = model.WalkStepGoal;
+                Double runGoal = model.RunStepGoal;
+                Double distGoal = model.DistGoal;
                 SqlCommand cmd = sqlConnection.CreateCommand();
 
                 try
@@ -66,15 +66,15 @@ namespace Bootstrap.Controllers
                     {
                         cmd.CommandText = String.Format(
                             "UPDATE [dbo].[UserGoals] " +
-                            "SET [StepGoal] = {0}, [CalGoal] = {1}, [MinGoal] = {2}, [MileGoal] = {3} " +
-                            "WHERE [Id] = '{4}'", stepGoal, calGoal, minGoal, mileGoal, id);
+                            "SET [StepGoal] = {0}, [CalGoal] = {1}, [WalkGoal] = {2}, [RunGoal] = {3}, [DistGoal] = {4} " +
+                            "WHERE [Id] = '{5}'", stepGoal, calGoal, walkGoal, distGoal, id);
                     }
                     else
                     {
                         cmd.CommandText = String.Format(
                             "INSERT INTO [dbo].[UserGoals] " +
-                            "(Id, StepGoal, CalGoal, MinGoal, MileGoal) " +
-                            "VALUES ('{0}', {1}, {2}, {3}, {4})", id, stepGoal, calGoal, minGoal, mileGoal);
+                            "(Id, StepGoal, CalGoal, WalkGoal, RunGoal, DistGoal) " +
+                            "VALUES ('{0}', {1}, {2}, {3}, {4}, {5})", id, stepGoal, calGoal, walkGoal, runGoal, distGoal);
                     }
 
                     cmd.ExecuteNonQuery();

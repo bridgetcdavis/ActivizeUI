@@ -7,8 +7,8 @@ $(function () {
     $('.namespaceQuery').typeahead([
    {
        name: 'accounts',
-       prefetch: '/User/getMinHistory',
-       remote: '/User/getMinHistory'
+       prefetch: '/User/getStepHistory',
+       remote: '/User/getStepHistory'
    }
     ]).on('typeahead:selected', function () { refresh(); });
 
@@ -18,9 +18,9 @@ $(function () {
 
 function refresh() {
 
-    $("#userDailyMinutes").html('loading...');
-    plotCharts("userDailyMinutes", "/User/getMinHistory", plotKPI, {
-        metric: $("#metric").val()
+    $("#userDailyTotalSteps").html('loading...');
+    plotCharts("userDailyTotalSteps", "/User/getStepHistory", plotKPI, {
+//        metric: $("#metric").val()
     });
 
 }
@@ -72,3 +72,5 @@ function plotMessagingKPIData(container, data, namespace) {
         series: data
     });
 }
+
+

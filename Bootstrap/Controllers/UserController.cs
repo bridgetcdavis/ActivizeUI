@@ -1,24 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Timers;
-using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Azure.Zumo.Test.Helper;
 using Newtonsoft.Json.Linq;
-using System.Threading.Tasks;
-using Bootstrap.Models;
-using System.Security.Principal;
 
 namespace Bootstrap.Controllers
 {
@@ -30,10 +17,11 @@ namespace Bootstrap.Controllers
             SELECT
             [Timestamp],
             [Id],
-            [Steps],
+            [RunStep],
+            [WalkStep],
+            [TotalStep],
             [Calories],
-            [Minutes],
-            [Miles]
+            [Distance]
             FROM [dbo].[FinalDaily]
             where [Timestamp] >= @start AND [Timestamp] <= @end
             and [Id] = @namespace
@@ -46,84 +34,20 @@ namespace Bootstrap.Controllers
         // GET: /User/
         public new ActionResult User()
         {
-//            aTimer = new System.Timers.Timer(1000); //1 second
-//            aTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
-//
-//            aTimer.AutoReset = true;
-//            aTimer.Enabled = true;
-//
-//            Console.WriteLine("TEST");
-
             return View();
         }
 
-        //private void OnTimedEvent(object source, ElapsedEventArgs e)
-        //{
-        //    string conString;
-
-        //    ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
-        //    if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
-        //    {
-        //        throw new Exception("Fatal error: missing connection string in web.config file");
-        //    }
-        //    conString = mySetting.ConnectionString;
-
-        //    SqlConnection sqlConnection = new SqlConnection(conString);
-
-        //    sqlConnection.Open();
-        //    SqlCommand cmd = sqlConnection.CreateCommand();
-
-        //    cmd.CommandText = String.Format(
-        //                    "INSERT INTO [dbo].[TestTimer] " +
-        //                    "(Count, Timestamp) " +
-        //                    "VALUES ({0}, {1})", count++, DateTime.Now);
-        //    cmd.ExecuteNonQuery();
-
-        //}
-
-        // GET: /User/DailySteps
-        public ActionResult DailySteps()
+        public ActionResult DailyTotalSteps()
         {
-            ViewBag.Message = "Graph of your daily steps.";
+            ViewBag.Message = "Graph of your daily total steps.";
             return View();
         }
 
-        //POST: /User/DailySteps
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DailySteps(RegisterViewModel model) //need a new view model
+        public ActionResult DailyRunSteps()
         {
-
-
-            return View(model);
+            ViewBag.Message = "Graph of your daily steps run.";
+            return View();
         }
-//
-//        //
-//        // POST: /Account/Register
-//        [HttpPost]
-//        [AllowAnonymous]
-//        [ValidateAntiForgeryToken]
-//        public async Task<ActionResult> DailySteps(RegisterViewModel model)
-//        {
-//            if (ModelState.IsValid)
-//            {
-//                var user = new ApplicationUser() { UserName = model.UserName };
-//                var result = await UserManager.CreateAsync(user, model.Password);
-//                if (result.Succeeded)
-//                {
-//                    await SignInAsync(user, isPersistent: false);
-//                    return RedirectToAction("Index", "Home");
-//                }
-//                else
-//                {
-//                    AddErrors(result);
-//                }
-//            }
-//
-//            // If we got this far, something failed, redisplay form
-//            return View(model);
-//        }
 
         public ActionResult DailyCalories()
         {
@@ -131,15 +55,15 @@ namespace Bootstrap.Controllers
             return View();
         }
 
-        public ActionResult DailyMinutes()
+        public ActionResult DailyWalkSteps()
         {
-            ViewBag.Message = "Graph of your daily active minutes.";
+            ViewBag.Message = "Graph of your daily steps walked.";
             return View();
         }
 
-        public ActionResult DailyMiles()
+        public ActionResult DailyDistance()
         {
-            ViewBag.Message = "Graph of your daily active miles.";
+            ViewBag.Message = "Graph of your daily distance.";
             return View();
         }
 
@@ -191,40 +115,6 @@ namespace Bootstrap.Controllers
             currentUserName = username;
             currentUserID = getId(username);
             return "";
-        }
-
-        public static string queryTestTimer()
-        {
-            int newCount = count;
-
-            string conString;
-
-            ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
-            if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
-            {
-                throw new Exception("Fatal error: missing connection string in web.config file");
-            }
-            conString = mySetting.ConnectionString;
-
-            SqlConnection sqlConnection = new SqlConnection(conString);
-            sqlConnection.Open();
-            string query = "SELECT * FROM [dbo].[TestTimer]";
-            SqlCommand queryCommand = new SqlCommand(query, sqlConnection);
-
-            SqlDataReader queryReader = queryCommand.ExecuteReader();
-            DataTable dataTable = new DataTable();
-            dataTable.Load(queryReader);
-            string cols = string.Empty;
-
-            for (int i = 0; i < newCount; i++)
-            {
-                foreach (DataColumn col in dataTable.Columns)
-                {
-                    cols += dataTable.Rows[i][col.ColumnName] + " | ";
-                }
-            }
-
-            return cols;
         }
 
         public static string getId(string user)
@@ -288,21 +178,13 @@ namespace Bootstrap.Controllers
             return cols;
         }
 
+        //is never called
         public static string getSQLHistory(DateTime? from, DateTime? to, string ns)
         {
-//            insertSQL();
-
-//            DateTime end = to == null ? DateTime.Now - TimeSpan.FromDays(1) : to.Value;
-//            DateTime start = from == null ? end - TimeSpan.FromDays(7) : from.Value;
-
-//            start = start.Date;
-//            end = end.Date;
-
             DateTime date = DateTime.Now;
             TimeSpan ts = new TimeSpan(0, 0, 0, 0);
             DateTime end = date.Date + ts;
             DateTime start = date.AddDays(-30).Date + ts;
-
 
             string conString;
 
@@ -313,57 +195,39 @@ namespace Bootstrap.Controllers
             }
             conString = mySetting.ConnectionString;
 
-            //SqlConnection sqlConnection = new SqlConnection(conString);
-
-            // string connStr = ConfigurationManager.ConnectionStrings["MessagingSQL"].ConnectionString;
             List<NamespaceSQL> sqlResult;
 
             using (SqlConnection sqlConn = new SqlConnection(conString))
             {
                 sqlResult = SqlHelpers.RetryExecute<List<NamespaceSQL>>(() =>
                 {
-//                    string query = "INSERT"
-
                     return SqlHelpers.ExecuteSqlCommandWithResults(NamespaceSQL.Initializer,
                         sqlConn,
                         SQLsForCustomerQuery,
                         new SqlParameter("start", start),
                         new SqlParameter("end", end),
-                        new SqlParameter("namespace", "1112"));
+                        new SqlParameter("namespace", currentUserID));
                 });
             }
 
-            JArray namespaceStepsArray = new JArray();
+            JArray namespaceTotalStepArray = new JArray();
             JArray namespaceCaloriesArray = new JArray();
-            JArray namespaceMilesArray = new JArray();
-            JArray namespaceMinutesArray = new JArray();
+            JArray namespaceWalkStepArray = new JArray();
+            JArray namespaceRunStepArray = new JArray();
+            JArray namespaceDistanceArray = new JArray();
             string scaleUnit = string.Empty;
 
             foreach (NamespaceSQL kpi in sqlResult)
             {
-//                JArray StepsRecord =
-//                   new JArray(DateTimeToUnixTimestamp(kpi.Timestamp),
-//                       kpi.Steps);
-
-                namespaceStepsArray.Add(kpi.Steps);
-
-//                JArray CaloriesRecord =
-//                   new JArray(DateTimeToUnixTimestamp(kpi.Timestamp),
-//                       kpi.Calories);
+                namespaceTotalStepArray.Add(kpi.TotalStep);
 
                 namespaceCaloriesArray.Add(kpi.Calories);
 
-//                JArray MinutesRecord =
-//                   new JArray(DateTimeToUnixTimestamp(kpi.Timestamp),
-//                       kpi.Minutes);
+                namespaceRunStepArray.Add(kpi.RunStep);
 
-                namespaceMinutesArray.Add(kpi.Minutes);
+                namespaceWalkStepArray.Add(kpi.WalkStep);
 
-//                JArray MilesRecord =
-//                new JArray(DateTimeToUnixTimestamp(kpi.Timestamp),
-//                    kpi.Miles);
-
-                namespaceMilesArray.Add(kpi.Miles);
+                namespaceDistanceArray.Add(kpi.Distance);
             }
 
             if (sqlResult.Count > 0)
@@ -373,27 +237,29 @@ namespace Bootstrap.Controllers
 
             JArray SQLsForNameSpace = new JArray();
 
-            JObject namespaceSteps = new JObject();
-            namespaceSteps["name"] = "Steps";
-//            namespaceSteps["pointInterval"] = 24*3600*1000;
-//            namespaceSteps["pointStart"] = start;
-            namespaceSteps["data"] = namespaceStepsArray;
-            SQLsForNameSpace.Add(namespaceSteps);
+            JObject namespaceTotalStep = new JObject();
+            namespaceTotalStep["name"] = "TotalStep";
+            namespaceTotalStep["data"] = namespaceTotalStepArray;
+            SQLsForNameSpace.Add(namespaceTotalStep);
 
             JObject namespaceCalories = new JObject();
             namespaceCalories["name"] = "Calories";
             namespaceCalories["data"] = namespaceCaloriesArray;
             SQLsForNameSpace.Add(namespaceCalories);
 
-            JObject namespaceMinutes = new JObject();
-            namespaceMinutes["name"] = "Minutes";
-            namespaceMinutes["data"] = namespaceMinutesArray;
-            SQLsForNameSpace.Add(namespaceMinutes);
+            JObject namespaceRunStep = new JObject();
+            namespaceRunStep["name"] = "RunStep";
+            namespaceRunStep["data"] = namespaceRunStepArray;
+            SQLsForNameSpace.Add(namespaceRunStep);
 
-            JObject namespaceMiles = new JObject();
-            namespaceMiles["name"] = "Miles";
-            namespaceMiles["data"] = namespaceMilesArray;
-            SQLsForNameSpace.Add(namespaceMiles);
+            JObject namespaceWalkStep = new JObject();
+            namespaceWalkStep["name"] = "WalkStep";
+            namespaceWalkStep["data"] = namespaceWalkStepArray;
+            SQLsForNameSpace.Add(namespaceWalkStep);
+
+            JObject namespaceDistance = new JObject();
+            namespaceDistance["name"] = "Distance";
+            namespaceDistance["data"] = namespaceDistanceArray;
 
             JObject result = new JObject();
             result["NamespaceName"] = ns;
@@ -404,84 +270,6 @@ namespace Bootstrap.Controllers
         }
 
         //using string to determine metric yields Internal Server Error. Sticking with separate methods for now.
-//        public string getSQLHistory(string metric)
-//        {
-//            DateTime date = DateTime.Now;
-//            TimeSpan ts = new TimeSpan(0, 0, 0, 0);
-//            DateTime end = date.Date + ts;
-//            DateTime start = date.AddDays(-30).Date + ts;
-//
-//
-//            string conString;
-//
-//            ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
-//            if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
-//            {
-//                throw new Exception("Fatal error: missing connection string in web.config file");
-//            }
-//            conString = mySetting.ConnectionString;
-
-//            SqlConnection sqlConnection = new SqlConnection(conString);
-//
-//            List<NamespaceSQL> sqlResult;
-//
-//            using (SqlConnection sqlConn = new SqlConnection(builder.ConnectionString))
-//            {
-//                sqlResult = SqlHelpers.RetryExecute<List<NamespaceSQL>>(() =>
-//                {
-//                    return SqlHelpers.ExecuteSqlCommandWithResults(NamespaceSQL.Initializer,
-//                        sqlConn,
-//                        SQLsForCustomerQuery,
-//                        new SqlParameter("start", start),
-//                        new SqlParameter("end", end),
-//                        new SqlParameter("namespace", "1112"));
-//                });
-//            }
-//
-//            JArray namespaceArray = new JArray();
-//
-//            foreach (NamespaceSQL kpi in sqlResult)
-//            {
-//                JArray Record;
-//                switch (metric)
-//                {
-//                    case "Steps":
-//                        Record = new JArray(DateTimeToUnixTimestamp(kpi.Timestamp), kpi.Steps);
-//                        break;
-//                    case "Calories":
-//                        Record = new JArray(DateTimeToUnixTimestamp(kpi.Timestamp), kpi.Calories);
-//                        break;
-//                    case "Minutes":
-//                        Record = new JArray(DateTimeToUnixTimestamp(kpi.Timestamp), kpi.Minutes);
-//                        break;
-//                    case "Miles":
-//                        Record = new JArray(DateTimeToUnixTimestamp(kpi.Timestamp), kpi.Miles);
-//                        break;
-//                    default:
-//                        Record = new JArray(DateTimeToUnixTimestamp(kpi.Timestamp), kpi.Timestamp);
-//                        break;
-//                }
-//                
-//
-//                namespaceArray.Add(Record);
-//            }
-//
-//            JArray SQLsForNameSpace = new JArray();
-//
-//            JObject namespaces = new JObject();
-//            namespaces["name"] = metric;
-//            namespaces["data"] = namespaceArray;
-//            SQLsForNameSpace.Add(namespaces);
-//
-//            JObject result = new JObject();
-//            result["NamespaceName"] = sqlResult[0].Id;
-//            result["ScaleUnit"] = metric;
-//            result["NamespaceSQLs"] = SQLsForNameSpace;
-//
-//            return result.ToString();
-//        }
-
-
         public string getStepHistory()
         {
             DateTime date = DateTime.Now;
@@ -519,7 +307,7 @@ namespace Bootstrap.Controllers
 
             foreach (NamespaceSQL kpi in sqlResult)
             {
-                JArray stepRecord = new JArray(DateTimeToUnixTimestamp(kpi.Timestamp), kpi.Steps);
+                JArray stepRecord = new JArray(DateTimeToUnixTimestamp(kpi.Timestamp), kpi.TotalStep);
 
                 stepNamespaceArray.Add(stepRecord);
             }
@@ -527,13 +315,13 @@ namespace Bootstrap.Controllers
             JArray StepsForNameSpace = new JArray();
 
             JObject stepNamespaces = new JObject();
-            stepNamespaces["name"] = "Steps";
+            stepNamespaces["name"] = "TotalStep";
             stepNamespaces["data"] = stepNamespaceArray;
             StepsForNameSpace.Add(stepNamespaces);
 
             JObject stepResult = new JObject();
             stepResult["NamespaceName"] = currentUserName;
-            stepResult["ScaleUnit"] = "Steps";
+            stepResult["ScaleUnit"] = "TotalStep";
             stepResult["NamespaceSQLs"] = StepsForNameSpace;
 
             return stepResult.ToString();
@@ -596,7 +384,7 @@ namespace Bootstrap.Controllers
             return calResult.ToString();
         }
 
-        public string getMinHistory()
+        public string getRunStepHistory()
         {
             DateTime date = DateTime.Now;
             TimeSpan ts = new TimeSpan(0, 0, 0, 0);
@@ -629,31 +417,31 @@ namespace Bootstrap.Controllers
                 sqlConn.Close();
             }
 
-            JArray minNamespaceArray = new JArray();
+            JArray rStepNamespaceArray = new JArray();
 
             foreach (NamespaceSQL kpi in sqlResult)
             {
-                JArray minRecord = new JArray(DateTimeToUnixTimestamp(kpi.Timestamp), kpi.Minutes);
+                JArray rStepRecord = new JArray(DateTimeToUnixTimestamp(kpi.Timestamp), kpi.RunStep);
 
-                minNamespaceArray.Add(minRecord);
+                rStepNamespaceArray.Add(rStepRecord);
             }
 
-            JArray minsForNameSpace = new JArray();
+            JArray rStepForNameSpace = new JArray();
 
-            JObject minNamespaces = new JObject();
-            minNamespaces["name"] = "Minutes";
-            minNamespaces["data"] = minNamespaceArray;
-            minsForNameSpace.Add(minNamespaces);
+            JObject rStepNamespaces = new JObject();
+            rStepNamespaces["name"] = "RunStep";
+            rStepNamespaces["data"] = rStepNamespaceArray;
+            rStepForNameSpace.Add(rStepNamespaces);
 
-            JObject minResult = new JObject();
-            minResult["NamespaceName"] = currentUserName;
-            minResult["ScaleUnit"] = "Minutes";
-            minResult["NamespaceSQLs"] = minsForNameSpace;
+            JObject rStepResult = new JObject();
+            rStepResult["NamespaceName"] = currentUserName;
+            rStepResult["ScaleUnit"] = "RunStep";
+            rStepResult["NamespaceSQLs"] = rStepForNameSpace;
 
-            return minResult.ToString();
+            return rStepResult.ToString();
         }
 
-        public string getMileHistory()
+        public string getWalkStepHistory()
         {
             DateTime date = DateTime.Now;
             TimeSpan ts = new TimeSpan(0, 0, 0, 0);
@@ -686,28 +474,85 @@ namespace Bootstrap.Controllers
                 sqlConn.Close();
             }
 
-            JArray mileNamespaceArray = new JArray();
+            JArray wStepNamespaceArray = new JArray();
 
             foreach (NamespaceSQL kpi in sqlResult)
             {
-                JArray mileRecord = new JArray(DateTimeToUnixTimestamp(kpi.Timestamp), kpi.Miles);
+                JArray wStepRecord = new JArray(DateTimeToUnixTimestamp(kpi.Timestamp), kpi.WalkStep);
 
-                mileNamespaceArray.Add(mileRecord);
+                wStepNamespaceArray.Add(wStepRecord);
             }
 
-            JArray MilesForNameSpace = new JArray();
+            JArray wStepForNameSpace = new JArray();
 
-            JObject mileNamespaces = new JObject();
-            mileNamespaces["name"] = "Miles";
-            mileNamespaces["data"] = mileNamespaceArray;
-            MilesForNameSpace.Add(mileNamespaces);
+            JObject wStepNamespaces = new JObject();
+            wStepNamespaces["name"] = "WalkStep";
+            wStepNamespaces["data"] = wStepNamespaceArray;
+            wStepForNameSpace.Add(wStepNamespaces);
 
-            JObject mileResult = new JObject();
-            mileResult["NamespaceName"] = currentUserName;
-            mileResult["ScaleUnit"] = "Miles";
-            mileResult["NamespaceSQLs"] = MilesForNameSpace;
+            JObject wStepResult = new JObject();
+            wStepResult["NamespaceName"] = currentUserName;
+            wStepResult["ScaleUnit"] = "WalkStep";
+            wStepResult["NamespaceSQLs"] = wStepForNameSpace;
 
-            return mileResult.ToString();
+            return wStepResult.ToString();
+        }
+
+        public string getDistHistory()
+        {
+            DateTime date = DateTime.Now;
+            TimeSpan ts = new TimeSpan(0, 0, 0, 0);
+            DateTime end = date.Date + ts;
+            DateTime start = date.AddDays(-30).Date + ts;
+
+
+            string conString;
+
+            ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
+            if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
+            {
+                throw new Exception("Fatal error: missing connection string in web.config file");
+            }
+            conString = mySetting.ConnectionString;
+
+            List<NamespaceSQL> sqlResult;
+
+            using (SqlConnection sqlConn = new SqlConnection(conString))
+            {
+                sqlResult = SqlHelpers.RetryExecute<List<NamespaceSQL>>(() =>
+                {
+                    return SqlHelpers.ExecuteSqlCommandWithResults(NamespaceSQL.Initializer,
+                        sqlConn,
+                        SQLsForCustomerQuery,
+                        new SqlParameter("start", start),
+                        new SqlParameter("end", end),
+                        new SqlParameter("namespace", currentUserID));
+                });
+                sqlConn.Close();
+            }
+
+            JArray distNamespaceArray = new JArray();
+
+            foreach (NamespaceSQL kpi in sqlResult)
+            {
+                JArray distRecord = new JArray(DateTimeToUnixTimestamp(kpi.Timestamp), kpi.Distance);
+
+                distNamespaceArray.Add(distRecord);
+            }
+
+            JArray DistanceForNameSpace = new JArray();
+
+            JObject distNamespaces = new JObject();
+            distNamespaces["name"] = "Distance";
+            distNamespaces["data"] = distNamespaceArray;
+            DistanceForNameSpace.Add(distNamespaces);
+
+            JObject distResult = new JObject();
+            distResult["NamespaceName"] = currentUserName;
+            distResult["ScaleUnit"] = "Distance";
+            distResult["NamespaceSQLs"] = DistanceForNameSpace;
+
+            return distResult.ToString();
         }
 
         public static double DateTimeToUnixTimestamp(DateTime dateTime)
@@ -722,10 +567,11 @@ namespace Bootstrap.Controllers
     {
         public DateTime Timestamp { get; set; }
         public string Id { get; set; }
-        public double Steps { get; set; }
+        public double RunStep { get; set; }
+        public double WalkStep { get; set; }
+        public double TotalStep { get; set; }
         public double Calories { get; set; }
-        public double Minutes { get; set; }
-        public double Miles { get; set; }
+        public double Distance { get; set; }
 
         public static NamespaceSQL Initializer(SqlDataReader reader)
         {
@@ -739,13 +585,15 @@ namespace Bootstrap.Controllers
                         break;
                     case "Id": namespaceSQL.Id = reader[i].ToString();
                         break;
-                    case "Steps": namespaceSQL.Steps = Convert.ToDouble(reader[i]);
+                    case "TotalStep": namespaceSQL.TotalStep = Convert.ToDouble(reader[i]);
                         break;
                     case "Calories": namespaceSQL.Calories = Convert.ToDouble(reader[i]);
                         break;
-                    case "Minutes": namespaceSQL.Minutes = Convert.ToDouble(reader[i]);
+                    case "RunStep": namespaceSQL.RunStep = Convert.ToDouble(reader[i]);
                         break;
-                    case "Miles": namespaceSQL.Miles = Convert.ToDouble(reader[i]);
+                    case "WalkStep": namespaceSQL.WalkStep = Convert.ToDouble(reader[i]);
+                        break;
+                    case "Distance": namespaceSQL.Distance = Convert.ToDouble(reader[i]);
                         break;
                 }
             }

@@ -13,16 +13,19 @@ namespace Bootstrap.Models
         [Display(Name = "User name")]
         public string Id { get; set; }
 
-        [Display(Name = "Steps Taken Goal")]
+        [Display(Name = "Total Steps Taken Goal")]
         public double StepGoal { get; set; }
 
         [Display(Name = "Calories Burned Goal")]
         public double CalGoal { get; set; }
 
-        [Display(Name = "Active Minutes Goal")]
-        public double MinGoal { get; set; }
+        [Display(Name = "Walk Steps Taken Goal")]
+        public double WalkStepGoal { get; set; }
 
-        [Display(Name = "Active Miles Goal")]
-        public double MileGoal { get; set; }
+        [Display(Name = "Run Steps Taken Goal")]
+        public double RunStepGoal { get; set; }
+
+        [Display(Name = "Distance Goal")]
+        public double DistGoal { get; set; }
     }
 }

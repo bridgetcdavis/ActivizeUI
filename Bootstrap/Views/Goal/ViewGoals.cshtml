@@ -8,7 +8,31 @@
 <h2>@User.Identity.GetUserName()</h2>
 <h3>@ViewBag.Message</h3>
 
-<div class="navbar navbar-lblue" id="Steps">
+<div class="navbar navbar-default" id="RunSteps">
+    <div class="navbar-header">
+        @{
+            double rsteps = double.Parse(GoalController.queryGoals(GoalController.getID(User.Identity.GetUserName()), "RunStepGoal"));
+        }
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse" background-color="#00AEDD">
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Run Steps Taken: @rsteps</a>
+    </div>
+</div>
+
+<div class="navbar navbar-lblue" id="WalkSteps">
+    <div class="navbar-header">
+        @{
+            double wsteps = double.Parse(GoalController.queryGoals(GoalController.getID(User.Identity.GetUserName()), "WalkStepGoal"));
+        }
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse" background-color="#00AEDD">
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Walk Steps Taken: @wsteps</a>
+    </div>
+</div>
+
+<div class="navbar navbar-inverse" id="TotalSteps">
     <div class="navbar-header">
         @{
             double steps = double.Parse(GoalController.queryGoals(GoalController.getID(User.Identity.GetUserName()), "StepGoal"));
@@ -16,42 +40,30 @@
         <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse" background-color="#00AEDD">
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">Steps Taken: @steps</a>
+        <a class="navbar-brand" href="#">Total Steps Taken: @steps</a>
     </div>
 </div>
 
-<div class="navbar navbar-inverse" id="Calories">
+<div class="navbar navbar-green" id="Calories">
     <div class="navbar-header">
         @{
             double cals = double.Parse(GoalController.queryGoals(GoalController.getID(User.Identity.GetUserName()), "CalGoal"));
         }
-        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse" background-color="#00AEDD">
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse">
             <span class="icon-bar"></span>
         </button>
         <a class="navbar-brand" href="#">Calories Burned: @cals</a>
     </div>
 </div>
 
-<div class="navbar navbar-green" id="Minutes">
+<div class="navbar navbar-purple" id="Distance">
     <div class="navbar-header">
         @{
-            double mins = double.Parse(GoalController.queryGoals(GoalController.getID(User.Identity.GetUserName()), "MinGoal"));
+            double dist = double.Parse(GoalController.queryGoals(GoalController.getID(User.Identity.GetUserName()), "DistGoal"));
         }
         <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse">
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">Active Minutes: @mins</a>
-    </div>
-</div>
-
-<div class="navbar navbar-purple" id="Miles">
-    <div class="navbar-header">
-        @{
-            double miles = double.Parse(GoalController.queryGoals(GoalController.getID(User.Identity.GetUserName()), "MileGoal"));
-        }
-        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-            <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#">Active Miles: @miles</a>
+        <a class="navbar-brand" href="#">Distance: @dist</a>
     </div>
 </div>

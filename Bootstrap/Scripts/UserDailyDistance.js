@@ -7,8 +7,8 @@ $(function () {
     $('.namespaceQuery').typeahead([
    {
        name: 'accounts',
-       prefetch: '/User/getMileHistory',
-       remote: '/User/getMileHistory'
+       prefetch: '/User/getDistHistory',
+       remote: '/User/getDistHistory'
    }
     ]).on('typeahead:selected', function () { refresh(); });
 
@@ -18,8 +18,8 @@ $(function () {
 
 function refresh() {
 
-    $("#userDailyMiles").html('loading...');
-    plotCharts("userDailyMiles", "/User/getMileHistory", plotKPI, {
+    $("#userDailyDistance").html('loading...');
+    plotCharts("userDailyDistance", "/User/getDistHistory", plotKPI, {
         metric: $("#metric").val()
     });
 
