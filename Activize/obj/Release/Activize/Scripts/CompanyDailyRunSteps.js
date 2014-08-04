@@ -7,8 +7,8 @@ $(function () {
     $('.namespaceQuery').typeahead([
    {
        name: 'accounts',
-       prefetch: '/User/getMileHistory',
-       remote: '/User/getMileHistory'
+       prefetch: '/Company/getCompanyRunStepHistory',
+       remote: '/Company/getCompanyRunStepHistory'
    }
     ]).on('typeahead:selected', function () { refresh(); });
 
@@ -18,8 +18,8 @@ $(function () {
 
 function refresh() {
 
-    $("#userDailyMiles").html('loading...');
-    plotCharts("userDailyMiles", "/User/getMileHistory", plotKPI, {
+    $("#companyDailyRunSteps").html('loading...');
+    plotCharts("companyDailyRunSteps", "/Company/getCompanyRunStepHistory", plotKPI, {
         metric: $("#metric").val()
     });
 
@@ -29,14 +29,14 @@ function plotKPI(container, data) {
 
     $("#namespaceName").html('<h2>Namespace:' + data['NamespaceName'] + '</h2>');
     $("#scaleUnitName").html('<h2>ScaleUnit:' + data['ScaleUnit'] + '</h2>');
-    plotMessagingKPIData(container, data['NamespaceSQLs'], data['NamespaceName']);
+    plotMessagingKPIData(container, data['NamespaceCompanys'], data['NamespaceName']);
 }
 
 function plotMessagingKPIData(container, data, namespace) {
 
     $('#' + container).highcharts({
         chart: {
-            type: 'column'
+            type: 'line'
         },
         title: {
             text: namespace
@@ -60,8 +60,8 @@ function plotMessagingKPIData(container, data, namespace) {
             useHTML: true
         },
         plotOptions: {
-            column: {
-                pointPadding: 0.2,
+            line: {
+                color: '#CF284C',
                 borderWidth: 0
             }
         },

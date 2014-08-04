@@ -1,5 +1,4 @@
-C:\Users\t-bdavis\Documents\Visual Studio 2013\Projects\Bootstrap\Bootstrap\obj\Debug\Bootstrap.dll
-C:\Users\t-bdavis\Documents\Visual Studio 2013\Projects\Bootstrap\Bootstrap\obj\Debug\Bootstrap.pdb
+C:\Users\t-bdavis\Documents\Visual Studio 2013\Projects\Bootstrap\Bootstrap\obj\Debug\Activize.csprojResolveAssemblyReference.cache
 C:\Users\t-bdavis\Documents\Visual Studio 2013\Projects\Bootstrap\Bootstrap\bin\Bootstrap.dll.config
 C:\Users\t-bdavis\Documents\Visual Studio 2013\Projects\Bootstrap\Bootstrap\bin\Bootstrap.dll
 C:\Users\t-bdavis\Documents\Visual Studio 2013\Projects\Bootstrap\Bootstrap\bin\Bootstrap.pdb
@@ -103,4 +102,5 @@ C:\Users\t-bdavis\Documents\Visual Studio 2013\Projects\Bootstrap\Bootstrap\bin\
 C:\Users\t-bdavis\Documents\Visual Studio 2013\Projects\Bootstrap\Bootstrap\bin\ru\System.Spatial.resources.dll
 C:\Users\t-bdavis\Documents\Visual Studio 2013\Projects\Bootstrap\Bootstrap\bin\zh-Hans\System.Spatial.resources.dll
 C:\Users\t-bdavis\Documents\Visual Studio 2013\Projects\Bootstrap\Bootstrap\bin\zh-Hant\System.Spatial.resources.dll
-C:\Users\t-bdavis\Documents\Visual Studio 2013\Projects\Bootstrap\Bootstrap\obj\Debug\Activize.csprojResolveAssemblyReference.cache
+C:\Users\t-bdavis\Documents\Visual Studio 2013\Projects\Bootstrap\Bootstrap\obj\Debug\Bootstrap.dll
+C:\Users\t-bdavis\Documents\Visual Studio 2013\Projects\Bootstrap\Bootstrap\obj\Debug\Bootstrap.pdb

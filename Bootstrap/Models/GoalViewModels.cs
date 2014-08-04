@@ -11,10 +11,10 @@ namespace Bootstrap.Models
     public class GoalViewModel
     {
         [Display(Name = "User name")]
-        public string Id { get; set; }
+        public string deviceId { get; set; }
 
         [Display(Name = "Total Steps Taken Goal")]
-        public double StepGoal { get; set; }
+        public double TotalStepGoal { get; set; }
 
         [Display(Name = "Calories Burned Goal")]
         public double CalGoal { get; set; }

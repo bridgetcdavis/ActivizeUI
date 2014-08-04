@@ -35,7 +35,7 @@
 <div class="navbar navbar-inverse" id="TotalSteps">
     <div class="navbar-header">
         @{
-            double steps = double.Parse(GoalController.queryGoals(GoalController.getID(User.Identity.GetUserName()), "StepGoal"));
+            double steps = double.Parse(GoalController.queryGoals(GoalController.getID(User.Identity.GetUserName()), "TotalStepGoal"));
         }
         <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse" background-color="#00AEDD">
             <span class="icon-bar"></span>

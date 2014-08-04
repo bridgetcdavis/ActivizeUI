@@ -1,4 +1,5 @@
-﻿@using System.Timers
+﻿@using System.EnterpriseServices
+@using System.Timers
 @using Bootstrap.Controllers
 @using Bootstrap.Models
 @using Microsoft.AspNet.Identity
@@ -7,169 +8,188 @@
 
 @{
     ViewBag.Title = "User";
-    ViewBag.Message = "Your Gear information here:";
+    ViewBag.Message = "Your progress:";
     string user = User.Identity.GetUserName();
-    
-    string run = UserController.queryField(user, "RunStep");
-    string walk = UserController.queryField(user, "WalkStep");
-    string steps = UserController.queryField(user, "TotalStep");
-    string cals = UserController.queryField(user, "Calories");
-    string dist = UserController.queryField(user, "Distance");
-    
+    UserController.setUserID(User.Identity.GetUserName());
+    string run = String.Empty;
+    string walk = String.Empty;
+    string steps = String.Empty;
+    string cals = String.Empty;
+    string dist = String.Empty;
     string goals = String.Empty;
 }
 
-<h2>@User.Identity.GetUserName()</h2>
-<h3>@ViewBag.Message</h3>
-
-<div class="navbar navbar-default" id="RunSteps">
-    <div class="navbar-header">
-        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-            <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#">Run Steps Taken: @run</a>
-    </div>
-    @{
-        if (GoalController.hasGoal(user))
-        {
-            <div class="navbar-collapse collapse navbar-responsive-collapse">
+@{
+    //Timer timer = new Timer();
+    //timer.Interval = 2000;
+    //timer.Enabled = true;
+    //timer.Tick += new System.EventHandler(OnTimedEvent);
+}
+<head title=ViewBag.Title>
+    @*<meta http-equiv="refresh" content="2"/>*@
+    <h2>@User.Identity.GetUserName()</h2>
+    <h3>@ViewBag.Message</h3>    
+</head>
+<body>
+    <div id="Timer">
+        @{
+            run = UserController.queryField(user, "RunStep");
+            walk = UserController.queryField(user, "WalkStep");
+            steps = UserController.queryField(user, "TotalStep");
+            cals = UserController.queryField(user, "Calories");
+            dist = UserController.queryField(user, "Distance");
+        }
+        <div class="navbar navbar-default" id="RunSteps">
+            <div class="navbar-header">
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://activizeweb.cloudapp.net/User/DailyRunSteps">Run Steps Taken: @run</a>
+            </div>
             @{
-                double rstep = Double.Parse(run);
-                double goal = Double.Parse(GoalController.queryGoals(GoalController.getID(user), "RunStepGoal"));
-                rstep = goal - rstep;
-                if (rstep > 0)
+                if (GoalController.hasGoal(user))
                 {
-                    goals = rstep + " run steps left to reach your goal!";
-                }
-                else
-                {
-                    goals = "You've reached your goal!";
+                    <div class="navbar-collapse collapse navbar-responsive-collapse">
+                        @{
+                            int rstep = (int)Double.Parse(run);
+                            int goal = int.Parse(GoalController.queryGoals(GoalController.getID(user), "RunStepGoal"));
+                            rstep = goal - rstep;
+                            if (rstep > 0)
+                            {
+                                goals = rstep + " run steps left to reach your goal!";
+                            }
+                            else
+                            {
+                                goals = "You've reached your goal!";
+                            }
+                        }
+                        <i><a class="navbar-brand">@goals</a></i>
+                    </div>
                 }
             }
-            <i><a class="navbar-brand">@goals</a></i>
-            </div>
-        }
-    }
-</div>
+        </div>
 
-<div class="navbar navbar-lblue" id="WalkSteps">
-    <div class="navbar-header">
-        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse" background-color="#00AEDD">
-            <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="http://activizeweb.cloudapp.net/User/DailySteps">Walk Steps Taken: @walk</a>
-    </div>
-    @{
-        if (GoalController.hasGoal(user))
-        {
-            <div class="navbar-collapse collapse navbar-responsive-collapse">
+        <div class="navbar navbar-lblue" id="WalkSteps">
+            <div class="navbar-header">
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse" background-color="#00AEDD">
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://activizeweb.cloudapp.net/User/DailyWalkSteps">Walk Steps Taken: @walk</a>
+            </div>
             @{
-                double wstep = Double.Parse(walk);
-                double goal = Double.Parse(GoalController.queryGoals(GoalController.getID(user), "WalkStepGoal"));
-                wstep = goal - wstep;
-                if (wstep > 0)
+                if (GoalController.hasGoal(user))
                 {
-                    goals = wstep + " walk steps left to reach your goal!";
-                }
-                else
-                {
-                    goals = "You've reached your goal!";
+                    <div class="navbar-collapse collapse navbar-responsive-collapse">
+                        @{
+                            int wstep = (int)Double.Parse(walk);
+                            int goal = int.Parse(GoalController.queryGoals(GoalController.getID(user), "WalkStepGoal"));
+                            wstep = goal - wstep;
+                            if (wstep > 0)
+                            {
+                                goals = wstep + " walk steps left to reach your goal!";
+                            }
+                            else
+                            {
+                                goals = "You've reached your goal!";
+                            }
+                        }
+                        <i><a class="navbar-brand">@goals</a></i>
+                    </div>
                 }
             }
-            <i><a class="navbar-brand">@goals</a></i>
-            </div>
-        }
-    }
     
-</div>
+        </div>
 
-<div class="navbar navbar-inverse" id="TotalSteps">
-    <div class="navbar-header">
-        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse" background-color="#00AEDD">
-            <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="http://activizeweb.cloudapp.net/User/DailyCalories">Total Steps Taken: @steps</a>
-    </div>
-    @{
-        if (GoalController.hasGoal(user))
-        {
-            <div class="navbar-collapse collapse navbar-responsive-collapse">
+        <div class="navbar navbar-inverse" id="TotalSteps">
+            <div class="navbar-header">
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse" background-color="#00AEDD">
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://activizeweb.cloudapp.net/User/DailyTotalSteps">Total Steps Taken: @steps</a>
+            </div>
             @{
-                double step = Double.Parse(steps);
-                double goal = Double.Parse(GoalController.queryGoals(GoalController.getID(user), "StepGoal"));
-                step = goal - step;
-                if (step > 0)
+                if (GoalController.hasGoal(user))
                 {
-                    goals = steps + " steps left to reach your goal!";
-                }
-                else
-                {
-                    goals = "You've reached your goal!";
+                    <div class="navbar-collapse collapse navbar-responsive-collapse">
+                        @{
+                            int step = (int)Double.Parse(steps);
+                            int goal = int.Parse(GoalController.queryGoals(GoalController.getID(user), "TotalStepGoal"));
+                            step = goal - step;
+                            if (step > 0)
+                            {
+                                goals = steps + " steps left to reach your goal!";
+                            }
+                            else
+                            {
+                                goals = "You've reached your goal!";
+                            }
+                        }
+                        <i><a class="navbar-brand">@goals</a></i>
+                    </div>
                 }
             }
-            <i><a class="navbar-brand">@goals</a></i>
-            </div>
-        }
-    }
-</div>
+        </div>
 
-<div class="navbar navbar-green" id="Calories">
-    <div class="navbar-header">
-        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-            <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="http://activizeweb.cloudapp.net/User/DailyMinutes">Calories Burned: @cals</a>
-    </div>
-    @{
-        if (GoalController.hasGoal(user))
-        {
-            <div class="navbar-collapse collapse navbar-responsive-collapse">
+        <div class="navbar navbar-green" id="Calories">
+            <div class="navbar-header">
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://activizeweb.cloudapp.net/User/DailyCalories">Calories Burned: @cals</a>
+            </div>
             @{
-                double cal = Double.Parse(cals);
-                double goal = Double.Parse(GoalController.queryGoals(GoalController.getID(user), "CalGoal"));
-                cal = goal - cal;
-                if (cal > 0)
+                if (GoalController.hasGoal(user))
                 {
-                    goals = cal + " calories left to reach your goal!";
-                }
-                else
-                {
-                    goals = "You've reached your goal!";
+                    <div class="navbar-collapse collapse navbar-responsive-collapse">
+                        @{
+                            int cal = (int)Double.Parse(cals);
+                            int goal = int.Parse(GoalController.queryGoals(GoalController.getID(user), "CalGoal"));
+                            cal = goal - cal;
+                            if (cal > 0)
+                            {
+                                goals = cal + " calories left to reach your goal!";
+                            }
+                            else
+                            {
+                                goals = "You've reached your goal!";
+                            }
+                        }
+                        <i><a class="navbar-brand">@goals</a></i>
+                    </div>
                 }
             }
-            <i><a class="navbar-brand">@goals</a></i>
-            </div>
-        }
-    }
-</div>
+        </div>
 
-<div class="navbar navbar-purple" id="Distance">
-    <div class="navbar-header">
-        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse">
-            <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="http://activizeweb.cloudapp.net/User/DailyMiles">Distance (mi): @dist</a>
-    </div>
-    @{
-        if (GoalController.hasGoal(user))
-        {
-            <div class="navbar-collapse collapse navbar-responsive-collapse">
-            @{
-                double mi = Double.Parse(dist);
-                double goal = Double.Parse(GoalController.queryGoals(GoalController.getID(user), "DistGoal"));
-                mi = goal - mi;
-                if (mi > 0)
-                {
-                    goals = mi + " miles left to reach your goal!";
-                }
-                else
-                {
-                    goals = "You've reached your goal!";
-                }
+    <div class="navbar navbar-purple" id="Distance">
+        <div class="navbar-header">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://activizeweb.cloudapp.net/User/DailyDistance">Distance (mi): @dist</a>
+        </div>
+        @{
+            if (GoalController.hasGoal(user))
+            {
+                <div class="navbar-collapse collapse navbar-responsive-collapse">
+                    @{
+                        double mi = Double.Parse(dist);
+                        double goal = Double.Parse(GoalController.queryGoals(GoalController.getID(user), "DistGoal"));
+                        mi = goal - mi;
+                        if (mi > 0)
+                        {
+                            goals = mi + " miles left to reach your goal!";
+                        }
+                        else
+                        {
+                            goals = "You've reached your goal!";
+                        }
+                    }
+                    <i><a class="navbar-brand">@goals</a></i>
+                </div>
             }
-            <i><a class="navbar-brand">@goals</a></i>
-            </div>
         }
-    }
-</div>
-@UserController.setUserID(User.Identity.GetUserName())
+        </div>
+    </div>
+</body>
+@Scripts.Render("~/bundles/jquery")
+<script src="~/Scripts/TimerUser.js"></script>

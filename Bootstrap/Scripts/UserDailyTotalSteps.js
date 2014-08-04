@@ -36,7 +36,7 @@ function plotMessagingKPIData(container, data, namespace) {
 
     $('#' + container).highcharts({
         chart: {
-            type: 'column'
+            type: 'line'
         },
         title: {
             text: namespace
@@ -60,8 +60,8 @@ function plotMessagingKPIData(container, data, namespace) {
             useHTML: true
         },
         plotOptions: {
-            column: {
-                pointPadding: 0.2,
+            line: {
+                color: '#eb7126',
                 borderWidth: 0
             }
         },

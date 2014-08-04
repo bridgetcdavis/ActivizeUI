@@ -185,6 +185,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CompanyController.cs" />
     <Compile Include="Controllers\GoalController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -208,8 +209,14 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="connection.config" />
     <None Include="Scripts\jquery-1.10.2-vsdoc.js" />
     <Content Include="Scripts\commonCharting.js" />
+    <Content Include="Scripts\CompanyDailyCalories.js" />
+    <Content Include="Scripts\CompanyDailyDistance.js" />
+    <Content Include="Scripts\CompanyDailyRunSteps.js" />
+    <Content Include="Scripts\CompanyDailyTotalSteps.js" />
+    <Content Include="Scripts\CompanyDailyWalkSteps.js" />
     <Content Include="Scripts\highcharts-more.js" />
     <Content Include="Scripts\highcharts.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -222,6 +229,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\TimerUser.js" />
     <Content Include="Scripts\UserDailyCalories.js" />
     <Content Include="Scripts\UserDailyDistance.js" />
     <Content Include="Scripts\UserDailyRunSteps.js" />
@@ -264,6 +272,12 @@
     <Content Include="Views\User\DailyRunSteps.cshtml" />
     <Content Include="Views\User\DailyDistance.cshtml" />
     <Content Include="Views\User\DailyWalkSteps.cshtml" />
+    <Content Include="Views\Company\Company.cshtml" />
+    <Content Include="Views\Company\DailyCompanyRunSteps.cshtml" />
+    <Content Include="Views\Company\DailyCompanyWalkSteps.cshtml" />
+    <Content Include="Views\Company\DailyCompanyTotalSteps.cshtml" />
+    <Content Include="Views\Company\DailyCompanyCalories.cshtml" />
+    <Content Include="Views\Company\DailyCompanyDistance.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

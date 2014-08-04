@@ -7,8 +7,8 @@ $(function () {
     $('.namespaceQuery').typeahead([
    {
        name: 'accounts',
-       prefetch: '/User/getStepHistory',
-       remote: '/User/getStepHistory'
+       prefetch: '/User/getWalkStepHistory',
+       remote: '/User/getWalkStepHistory'
    }
     ]).on('typeahead:selected', function () { refresh(); });
 
@@ -18,9 +18,9 @@ $(function () {
 
 function refresh() {
 
-    $("#userDailySteps").html('loading...');
-    plotCharts("userDailySteps", "/User/getStepHistory", plotKPI, {
-//        metric: $("#metric").val()
+    $("#userDailyWalkSteps").html('loading...');
+    plotCharts("userDailyWalkSteps", "/User/getWalkStepHistory", plotKPI, {
+        metric: $("#metric").val()
     });
 
 }
@@ -36,7 +36,7 @@ function plotMessagingKPIData(container, data, namespace) {
 
     $('#' + container).highcharts({
         chart: {
-            type: 'column'
+            type: 'line'
         },
         title: {
             text: namespace
@@ -60,8 +60,8 @@ function plotMessagingKPIData(container, data, namespace) {
             useHTML: true
         },
         plotOptions: {
-            column: {
-                pointPadding: 0.2,
+            line: {
+                color: '#00aedd',
                 borderWidth: 0
             }
         },
@@ -72,5 +72,3 @@ function plotMessagingKPIData(container, data, namespace) {
         series: data
     });
 }
-
-

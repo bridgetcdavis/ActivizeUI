@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<serviceModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Activize" generation="1" functional="0" release="0" Id="0aaeaa5f-3949-461a-b84a-e7473c3185da" dslVersion="1.2.0.0" xmlns="http://schemas.microsoft.com/dsltools/RDSM">
+<serviceModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Activize" generation="1" functional="0" release="0" Id="91596a4b-59f5-49e4-ba98-965085616798" dslVersion="1.2.0.0" xmlns="http://schemas.microsoft.com/dsltools/RDSM">
   <groups>
     <group name="ActivizeGroup" generation="1" functional="0" release="0">
       <componentports>
@@ -178,19 +178,19 @@
     </group>
   </groups>
   <implements>
-    <implementation Id="035eff2d-3f9d-4329-b6b1-bd532ae867e0" ref="Microsoft.RedDog.Contract\ServiceContract\ActivizeContract@ServiceDefinition">
+    <implementation Id="e42ff383-baf9-4f96-90e1-55df107af603" ref="Microsoft.RedDog.Contract\ServiceContract\ActivizeContract@ServiceDefinition">
       <interfacereferences>
-        <interfaceReference Id="36f2ab91-85f9-4463-b1f7-7e874560a376" ref="Microsoft.RedDog.Contract\Interface\Activize:Endpoint1@ServiceDefinition">
+        <interfaceReference Id="ddd572bc-b619-4466-b682-3d0f2a1ecf38" ref="Microsoft.RedDog.Contract\Interface\Activize:Endpoint1@ServiceDefinition">
           <inPort>
             <inPortMoniker name="/Activize/ActivizeGroup/Activize:Endpoint1" />
           </inPort>
         </interfaceReference>
-        <interfaceReference Id="14e16484-9031-412a-a2b6-11597515db21" ref="Microsoft.RedDog.Contract\Interface\Activize:Microsoft.WindowsAzure.Plugins.RemoteForwarder.RdpInput@ServiceDefinition">
+        <interfaceReference Id="9f4c9e24-72ce-4dcd-a4e9-d53d25724a21" ref="Microsoft.RedDog.Contract\Interface\Activize:Microsoft.WindowsAzure.Plugins.RemoteForwarder.RdpInput@ServiceDefinition">
           <inPort>
             <inPortMoniker name="/Activize/ActivizeGroup/Activize:Microsoft.WindowsAzure.Plugins.RemoteForwarder.RdpInput" />
           </inPort>
         </interfaceReference>
-        <interfaceReference Id="2e88dd5f-e7a4-4c04-b6f7-de71679b388d" ref="Microsoft.RedDog.Contract\Interface\Activize:Microsoft.WindowsAzure.Plugins.WebDeploy.InputEndpoint@ServiceDefinition">
+        <interfaceReference Id="75d19b6a-76c5-4279-8379-26f7b623a017" ref="Microsoft.RedDog.Contract\Interface\Activize:Microsoft.WindowsAzure.Plugins.WebDeploy.InputEndpoint@ServiceDefinition">
           <inPort>
             <inPortMoniker name="/Activize/ActivizeGroup/Activize:Microsoft.WindowsAzure.Plugins.WebDeploy.InputEndpoint" />
           </inPort>

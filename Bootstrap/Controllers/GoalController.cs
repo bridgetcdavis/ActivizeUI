@@ -52,7 +52,7 @@ namespace Bootstrap.Controllers
                 
                 
                 String id = getID(User.Identity.GetUserName());
-                Double stepGoal = model.StepGoal;
+                Double stepGoal = model.TotalStepGoal;
                 Double calGoal = model.CalGoal;
                 Double walkGoal = model.WalkStepGoal;
                 Double runGoal = model.RunStepGoal;
@@ -66,14 +66,14 @@ namespace Bootstrap.Controllers
                     {
                         cmd.CommandText = String.Format(
                             "UPDATE [dbo].[UserGoals] " +
-                            "SET [StepGoal] = {0}, [CalGoal] = {1}, [WalkGoal] = {2}, [RunGoal] = {3}, [DistGoal] = {4} " +
-                            "WHERE [Id] = '{5}'", stepGoal, calGoal, walkGoal, distGoal, id);
+                            "SET [TotalStepGoal] = {0}, [CalGoal] = {1}, [WalkStepGoal] = {2}, [RunStepGoal] = {3}, [DistGoal] = {4} " +
+                            "WHERE [deviceId] = '{5}'", stepGoal, calGoal, walkGoal, distGoal, id);
                     }
                     else
                     {
                         cmd.CommandText = String.Format(
                             "INSERT INTO [dbo].[UserGoals] " +
-                            "(Id, StepGoal, CalGoal, WalkGoal, RunGoal, DistGoal) " +
+                            "(deviceId, TotalStepGoal, CalGoal, WalkStepGoal, RunStepGoal, DistGoal) " +
                             "VALUES ('{0}', {1}, {2}, {3}, {4}, {5})", id, stepGoal, calGoal, walkGoal, runGoal, distGoal);
                     }
 
@@ -111,7 +111,7 @@ namespace Bootstrap.Controllers
 
             SqlConnection sqlConnection = new SqlConnection(conString);
             sqlConnection.Open();
-            string query = String.Format("SELECT [{0}] FROM [dbo].[UserGoals] WHERE [Id] = '{1}'", field, id);
+            string query = String.Format("SELECT [{0}] FROM [dbo].[UserGoals] WHERE [deviceId] = '{1}'", field, id);
             string cols = string.Empty;
             SqlCommand queryCommand = new SqlCommand(query, sqlConnection);
             try
@@ -183,7 +183,7 @@ namespace Bootstrap.Controllers
 
             SqlConnection sqlConnection = new SqlConnection(conString);
             sqlConnection.Open();
-            string query = String.Format("SELECT * FROM [dbo].[UserGoals] WHERE [Id] = '{0}'", getID(user));
+            string query = String.Format("SELECT * FROM [dbo].[UserGoals] WHERE [deviceId] = '{0}'", getID(user));
             string cols = String.Empty;
             try
             {

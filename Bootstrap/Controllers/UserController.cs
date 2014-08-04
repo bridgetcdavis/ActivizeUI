@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using Microsoft.Azure.Zumo.Test.Helper;
 using Newtonsoft.Json.Linq;
@@ -15,20 +17,12 @@ namespace Bootstrap.Controllers
         public static string currentUserName;
         private const string SQLsForCustomerQuery = @"
             SELECT
-            [Timestamp],
-            [Id],
-            [RunStep],
-            [WalkStep],
-            [TotalStep],
-            [Calories],
-            [Distance]
-            FROM [dbo].[FinalDaily]
-            where [Timestamp] >= @start AND [Timestamp] <= @end
-            and [Id] = @namespace
-            order by [Timestamp]";
-
-        private static System.Timers.Timer aTimer;
-        public static int count = 1;
+            *
+            FROM [dbo].[DailyUser]
+            where [timestamp] >= @start AND [timestamp] <= @end
+            and [deviceId] = @namespace
+            and [metric] = @metric
+            order by [timestamp]";
 
         //
         // GET: /User/
@@ -74,24 +68,28 @@ namespace Bootstrap.Controllers
             return View("~/Views/Goal/ViewGoals.cshtml");
         }
 
+        public async Task<string> recurringEvent()
+        {
+            return "";
+        }
+
         public static string queryField(string name, string field)
         {
-            string conString;
-
             ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
             if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
             {
                 throw new Exception("Fatal error: missing connection string in web.config file");
             }
-            conString = mySetting.ConnectionString;
+            string conString = mySetting.ConnectionString;
 
             SqlConnection sqlConnection = new SqlConnection(conString);
             sqlConnection.Open();
             string query =
                 String.Format(
-                    "SELECT [Values] FROM [dbo].[Daily] WHERE " +
-                    //[Timestamp] >= DATEADD(minute, -5, CURRENT_TIMESTAMP) 
-                    "[Metric] = '{0}' AND [Name] = '{1}' AND [Timestamp] = '2014-05-27 09:25:00.000'", field, name);
+                    "SELECT [value] FROM [dbo].[RTUser] WHERE " +
+                //[Timestamp] >= DATEADD(minute, -5, CURRENT_TIMESTAMP) 
+                    "[metric] = '{0}' AND [deviceId] = '{1}'" +
+                    "ORDER BY [timestamp] DESC", field, getId(name));
             string cols = string.Empty;
             SqlCommand queryCommand = new SqlCommand(query, sqlConnection);
             try
@@ -106,8 +104,24 @@ namespace Bootstrap.Controllers
             {
                 cols += "0.0";
             }
-
+            
             return cols;
+        }
+
+        //take this out later
+        public static void updating()
+        {
+            ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
+            if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
+            {
+                throw new Exception("Fatal error: missing connection string in web.config file");
+            }
+            string conString = mySetting.ConnectionString;
+
+            SqlConnection sqlConnection = new SqlConnection(conString);
+            sqlConnection.Open();
+            string query = String.Format("UPDATE [dbo].[UserInfo] SET [deviceId] = {0} WHERE [deviceId] = '2d209176-f8c8-4071-b7cf-46e5c4199511'", GoalController.getID("Beth"));
+            SqlCommand queryCommand = new SqlCommand(query, sqlConnection);
         }
 
         public static string setUserID(string username)
@@ -130,7 +144,7 @@ namespace Bootstrap.Controllers
 
             SqlConnection sqlConnection = new SqlConnection(conString);
             sqlConnection.Open();
-            string query = String.Format("SELECT [Device Id] FROM [dbo].[Daily] WHERE [Name] = '{0}'", user);
+            string query = String.Format("SELECT [deviceId] FROM [dbo].[UserInfo] WHERE [username] = '{0}'", user);
             string cols = string.Empty;
             SqlCommand queryCommand = new SqlCommand(query, sqlConnection);
             try
@@ -165,7 +179,7 @@ namespace Bootstrap.Controllers
             SqlConnection sqlConnection = new SqlConnection(conString);
 
             sqlConnection.Open();
-            string query = String.Format("SELECT [Name] FROM [dbo].[Daily] WHERE [Device ID] = {0}", id);
+            string query = String.Format("SELECT [username] FROM [dbo].[UserInfo] WHERE [deviceId] = {0}", id);
             string cols = string.Empty;
             SqlCommand queryCommand = new SqlCommand(query, sqlConnection);
 
@@ -232,7 +246,7 @@ namespace Bootstrap.Controllers
 
             if (sqlResult.Count > 0)
             {
-                scaleUnit = sqlResult[0].Id;
+                scaleUnit = sqlResult[0].deviceId;
             }
 
             JArray SQLsForNameSpace = new JArray();
@@ -298,7 +312,8 @@ namespace Bootstrap.Controllers
                         SQLsForCustomerQuery,
                         new SqlParameter("start", start),
                         new SqlParameter("end", end),
-                        new SqlParameter("namespace", currentUserID));
+                        new SqlParameter("namespace", currentUserID),
+                        new SqlParameter("metric", "TotalStep"));
                 });
                 sqlConn.Close();
             }
@@ -307,7 +322,8 @@ namespace Bootstrap.Controllers
 
             foreach (NamespaceSQL kpi in sqlResult)
             {
-                JArray stepRecord = new JArray(DateTimeToUnixTimestamp(kpi.Timestamp), kpi.TotalStep);
+                
+                JArray stepRecord = new JArray(DateTimeToUnixTimestamp(kpi.timestamp), kpi.TotalStep);
 
                 stepNamespaceArray.Add(stepRecord);
             }
@@ -355,7 +371,8 @@ namespace Bootstrap.Controllers
                         SQLsForCustomerQuery,
                         new SqlParameter("start", start),
                         new SqlParameter("end", end),
-                        new SqlParameter("namespace", currentUserID));
+                        new SqlParameter("namespace", currentUserID),
+                        new SqlParameter("metric", "Calories"));
                 });
                 sqlConn.Close();
             }
@@ -364,7 +381,7 @@ namespace Bootstrap.Controllers
 
             foreach (NamespaceSQL kpi in sqlResult)
             {
-                JArray calRecord = new JArray(DateTimeToUnixTimestamp(kpi.Timestamp), kpi.Calories);
+                JArray calRecord = new JArray(DateTimeToUnixTimestamp(kpi.timestamp), kpi.Calories);
 
                 calNamespaceArray.Add(calRecord);
             }
@@ -412,7 +429,8 @@ namespace Bootstrap.Controllers
                         SQLsForCustomerQuery,
                         new SqlParameter("start", start),
                         new SqlParameter("end", end),
-                        new SqlParameter("namespace", currentUserID));
+                        new SqlParameter("namespace", currentUserID),
+                        new SqlParameter("metric", "RunStep"));
                 });
                 sqlConn.Close();
             }
@@ -421,7 +439,7 @@ namespace Bootstrap.Controllers
 
             foreach (NamespaceSQL kpi in sqlResult)
             {
-                JArray rStepRecord = new JArray(DateTimeToUnixTimestamp(kpi.Timestamp), kpi.RunStep);
+                JArray rStepRecord = new JArray(DateTimeToUnixTimestamp(kpi.timestamp), kpi.RunStep);
 
                 rStepNamespaceArray.Add(rStepRecord);
             }
@@ -469,7 +487,8 @@ namespace Bootstrap.Controllers
                         SQLsForCustomerQuery,
                         new SqlParameter("start", start),
                         new SqlParameter("end", end),
-                        new SqlParameter("namespace", currentUserID));
+                        new SqlParameter("namespace", currentUserID),
+                        new SqlParameter("metric", "WalkStep"));
                 });
                 sqlConn.Close();
             }
@@ -478,7 +497,7 @@ namespace Bootstrap.Controllers
 
             foreach (NamespaceSQL kpi in sqlResult)
             {
-                JArray wStepRecord = new JArray(DateTimeToUnixTimestamp(kpi.Timestamp), kpi.WalkStep);
+                JArray wStepRecord = new JArray(DateTimeToUnixTimestamp(kpi.timestamp), kpi.WalkStep);
 
                 wStepNamespaceArray.Add(wStepRecord);
             }
@@ -526,7 +545,8 @@ namespace Bootstrap.Controllers
                         SQLsForCustomerQuery,
                         new SqlParameter("start", start),
                         new SqlParameter("end", end),
-                        new SqlParameter("namespace", currentUserID));
+                        new SqlParameter("namespace", currentUserID),
+                        new SqlParameter("metric", "Distance"));
                 });
                 sqlConn.Close();
             }
@@ -535,7 +555,7 @@ namespace Bootstrap.Controllers
 
             foreach (NamespaceSQL kpi in sqlResult)
             {
-                JArray distRecord = new JArray(DateTimeToUnixTimestamp(kpi.Timestamp), kpi.Distance);
+                JArray distRecord = new JArray(DateTimeToUnixTimestamp(kpi.timestamp), kpi.Distance);
 
                 distNamespaceArray.Add(distRecord);
             }
@@ -565,8 +585,8 @@ namespace Bootstrap.Controllers
 
     class NamespaceSQL
     {
-        public DateTime Timestamp { get; set; }
-        public string Id { get; set; }
+        public DateTime timestamp { get; set; }
+        public string deviceId { get; set; }
         public double RunStep { get; set; }
         public double WalkStep { get; set; }
         public double TotalStep { get; set; }
@@ -581,19 +601,24 @@ namespace Bootstrap.Controllers
             {
                 switch (reader.GetName(i))
                 {
-                    case "Timestamp": namespaceSQL.Timestamp = (DateTime)reader[i];
+                    case "timestamp": namespaceSQL.timestamp = (DateTime)reader[i];
                         break;
-                    case "Id": namespaceSQL.Id = reader[i].ToString();
+                    case "deviceId": namespaceSQL.deviceId = reader[i].ToString();
                         break;
-                    case "TotalStep": namespaceSQL.TotalStep = Convert.ToDouble(reader[i]);
-                        break;
-                    case "Calories": namespaceSQL.Calories = Convert.ToDouble(reader[i]);
-                        break;
-                    case "RunStep": namespaceSQL.RunStep = Convert.ToDouble(reader[i]);
-                        break;
-                    case "WalkStep": namespaceSQL.WalkStep = Convert.ToDouble(reader[i]);
-                        break;
-                    case "Distance": namespaceSQL.Distance = Convert.ToDouble(reader[i]);
+                    case "metric":
+                        switch (reader[i].ToString())
+                        {
+                            case "Calories": namespaceSQL.Calories = Convert.ToDouble(reader[++i]);
+                                break;
+                            case "Distance": namespaceSQL.Distance = Convert.ToDouble(reader[++i]);
+                                break;
+                            case "RunStep": namespaceSQL.RunStep = Convert.ToDouble(reader[++i]);
+                                break;
+                            case "TotalStep": namespaceSQL.TotalStep = Convert.ToDouble(reader[++i]);
+                                break;
+                            case "WalkStep": namespaceSQL.WalkStep = Convert.ToDouble(reader[++i]);
+                                break;
+                        }
                         break;
                 }
             }
