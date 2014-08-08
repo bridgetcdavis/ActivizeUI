@@ -86,10 +86,8 @@ namespace Bootstrap.Controllers
             sqlConnection.Open();
             string query =
                 String.Format(
-                    "SELECT [value] FROM [dbo].[RTUser] WHERE " +
-                //[Timestamp] >= DATEADD(minute, -5, CURRENT_TIMESTAMP) 
-                    "[metric] = '{0}' AND [deviceId] = '{1}'" +
-                    "ORDER BY [timestamp] DESC", field, getId(name));
+                    "SELECT [value] FROM [dbo].[RTUser] WHERE " + 
+                    "[metric] = '{0}' AND [deviceId] = '{1}'", field, getId(name));
             string cols = string.Empty;
             SqlCommand queryCommand = new SqlCommand(query, sqlConnection);
             try
@@ -102,8 +100,18 @@ namespace Bootstrap.Controllers
             }
             catch
             {
-                cols += "0.0";
+                cols += "0.00";
             }
+            double average = Double.Parse(cols);
+            if (field == "Calories" || field == "Distance")
+            {
+                average = Math.Round(average, 2);
+            }
+            else
+            {
+                average = Math.Round(average, 0);
+            }
+            cols = "" + average;
             
             return cols;
         }
@@ -289,7 +297,7 @@ namespace Bootstrap.Controllers
             DateTime date = DateTime.Now;
             TimeSpan ts = new TimeSpan(0, 0, 0, 0);
             DateTime end = date.Date + ts;
-            DateTime start = date.AddDays(-30).Date + ts;
+            DateTime start = date.AddDays(-40).Date + ts;
 
 
             string conString;
@@ -348,7 +356,7 @@ namespace Bootstrap.Controllers
             DateTime date = DateTime.Now;
             TimeSpan ts = new TimeSpan(0, 0, 0, 0);
             DateTime end = date.Date + ts;
-            DateTime start = date.AddDays(-30).Date + ts;
+            DateTime start = date.AddDays(-40).Date + ts;
 
 
             string conString;
@@ -406,7 +414,7 @@ namespace Bootstrap.Controllers
             DateTime date = DateTime.Now;
             TimeSpan ts = new TimeSpan(0, 0, 0, 0);
             DateTime end = date.Date + ts;
-            DateTime start = date.AddDays(-30).Date + ts;
+            DateTime start = date.AddDays(-40).Date + ts;
 
 
             string conString;
@@ -464,7 +472,7 @@ namespace Bootstrap.Controllers
             DateTime date = DateTime.Now;
             TimeSpan ts = new TimeSpan(0, 0, 0, 0);
             DateTime end = date.Date + ts;
-            DateTime start = date.AddDays(-30).Date + ts;
+            DateTime start = date.AddDays(-40).Date + ts;
 
 
             string conString;
@@ -522,7 +530,7 @@ namespace Bootstrap.Controllers
             DateTime date = DateTime.Now;
             TimeSpan ts = new TimeSpan(0, 0, 0, 0);
             DateTime end = date.Date + ts;
-            DateTime start = date.AddDays(-30).Date + ts;
+            DateTime start = date.AddDays(-40).Date + ts;
 
 
             string conString;

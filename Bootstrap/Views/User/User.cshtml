@@ -51,8 +51,8 @@
                 {
                     <div class="navbar-collapse collapse navbar-responsive-collapse">
                         @{
-                            int rstep = (int)Double.Parse(run);
-                            int goal = int.Parse(GoalController.queryGoals(GoalController.getID(user), "RunStepGoal"));
+                            double rstep = Double.Parse(run);
+                            double goal = Double.Parse(GoalController.queryGoals(GoalController.getID(user), "RunStepGoal"));
                             rstep = goal - rstep;
                             if (rstep > 0)
                             {
@@ -81,8 +81,8 @@
                 {
                     <div class="navbar-collapse collapse navbar-responsive-collapse">
                         @{
-                            int wstep = (int)Double.Parse(walk);
-                            int goal = int.Parse(GoalController.queryGoals(GoalController.getID(user), "WalkStepGoal"));
+                            double wstep = Double.Parse(walk);
+                            double goal = Double.Parse(GoalController.queryGoals(GoalController.getID(user), "WalkStepGoal"));
                             wstep = goal - wstep;
                             if (wstep > 0)
                             {
@@ -112,12 +112,12 @@
                 {
                     <div class="navbar-collapse collapse navbar-responsive-collapse">
                         @{
-                            int step = (int)Double.Parse(steps);
-                            int goal = int.Parse(GoalController.queryGoals(GoalController.getID(user), "TotalStepGoal"));
+                            double step = Double.Parse(steps);
+                            double goal = Double.Parse(GoalController.queryGoals(GoalController.getID(user), "TotalStepGoal"));
                             step = goal - step;
                             if (step > 0)
                             {
-                                goals = steps + " steps left to reach your goal!";
+                                goals = step + " steps left to reach your goal!";
                             }
                             else
                             {
@@ -142,8 +142,8 @@
                 {
                     <div class="navbar-collapse collapse navbar-responsive-collapse">
                         @{
-                            int cal = (int)Double.Parse(cals);
-                            int goal = int.Parse(GoalController.queryGoals(GoalController.getID(user), "CalGoal"));
+                            double cal = Double.Parse(cals);
+                            double goal = Double.Parse(GoalController.queryGoals(GoalController.getID(user), "CalGoal"));
                             cal = goal - cal;
                             if (cal > 0)
                             {

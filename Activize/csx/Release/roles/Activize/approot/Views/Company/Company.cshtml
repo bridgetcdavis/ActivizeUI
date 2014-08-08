@@ -7,10 +7,19 @@
 
 @{
     string user = User.Identity.GetUserName();
-    string company = CompanyController.setCompanyID(User.Identity.GetUserName()); 
+    string company = CompanyController.setCompanyID(User.Identity.GetUserName());
+    CompanyController.setTeamNumber();
     ViewBag.Title = "Team";
     ViewBag.Message = "Team Averages";
-    
+    string teamNumber;
+    if (CompanyController.hasTeam)
+    {
+        teamNumber = "" + CompanyController.currentTeamNumber;
+    }
+    else
+    {
+        teamNumber = "no";
+    }
 
     string run = CompanyController.queryCompanyByField(user, "RunStep");
     string walk = CompanyController.queryCompanyByField(user, "WalkStep");
@@ -22,7 +31,7 @@
 
 <h2>@company</h2>
 
-<h3>Team Activity Level: @activityLevel%</h3>
+<h3>Team Activity Level: @activityLevel% with @teamNumber team members</h3>
 
 <div class="progress progress-striped active" background-color="#22384e">
     <div class="progress-bar" style="width: @activityLevel%;"></div>

@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Bootstrap.Controllers
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -24,8 +25,6 @@
                     <li>@Html.ActionLink("User", "UserInfo", "Home")</li>
                     <li>@Html.ActionLink("Team", "Company", "Company")</li>
                     <li>@Html.ActionLink("Update Goals", "Goals","Goal")</li>
-                    @*<li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
@@ -38,7 +37,6 @@
             <p>&copy; @DateTime.Now.Year - My Activize</p>
         </footer>
     </div>
-    
     
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")

@@ -14,6 +14,8 @@ namespace Bootstrap.Controllers
     public class CompanyController : Controller
     {
         public static string currentCompanyId;
+        public static int currentTeamNumber;
+        public static bool hasTeam;
         private const string SQLsForCustomerQuery = @"
             SELECT
             *
@@ -68,6 +70,52 @@ namespace Bootstrap.Controllers
             return currentCompanyId;
         }
 
+        public static void setTeamNumber()
+        {
+            currentTeamNumber = teamNumber(currentCompanyId);
+        }
+
+        public static int teamNumber(string team)
+        {
+            int number;
+
+            ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
+            if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
+            {
+                throw new Exception("Fatal error: missing connection string in web.config file");
+            }
+            string conString = mySetting.ConnectionString;
+
+            SqlConnection sqlConnection = new SqlConnection(conString);
+            sqlConnection.Open();
+            string query = String.Format("SELECT COUNT(*) AS NumTeam FROM [dbo].[UserInfo] WHERE [companyId] = '{0}'", team);
+            string cols = string.Empty;
+            SqlCommand queryCommand = new SqlCommand(query, sqlConnection);
+            try
+            {
+                SqlDataReader queryReader = queryCommand.ExecuteReader();
+                DataTable dataTable = new DataTable();
+                dataTable.Load(queryReader);
+
+                cols += dataTable.Rows[0][dataTable.Columns[0].ColumnName];
+                number = int.Parse(cols);
+            }
+            catch
+            {
+                number = 1;
+            }
+            finally
+            {
+                sqlConnection.Close();
+            }
+            if (number == 0)
+            {
+                number = 1;
+            }
+
+            return number;
+        }
+
         public static string getCompanyId(string user)
         {
             ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
@@ -115,10 +163,8 @@ namespace Bootstrap.Controllers
             sqlConnection.Open();
             string query =
                 String.Format(
-                    "SELECT [value] FROM [dbo].[RTCompany] WHERE " +
-                //[Timestamp] >= DATEADD(minute, -5, CURRENT_TIMESTAMP)  
-                    "[metric] = '{0}' AND [companyId] = '{1}'" +
-                    "ORDER BY [timestamp]", field, getCompanyId(user));
+                    "SELECT [value] FROM [dbo].[RTCompany] WHERE " + 
+                    "[metric] = '{0}' AND [companyId] = '{1}'", field, getCompanyId(user));
             string cols = string.Empty;
             SqlCommand queryCommand = new SqlCommand(query, sqlConnection);
             try
@@ -135,7 +181,16 @@ namespace Bootstrap.Controllers
             }
 
             double average = Double.Parse(cols);
-            average = average/10.0;
+            average = average/currentTeamNumber;
+
+            if (field == "Calories" || field == "Distance")
+            {
+                average = Math.Round(average, 2);
+            }
+            else
+            {
+                average = Math.Round(average, 0);
+            }
             cols = "" + average;
 
             return cols;
@@ -145,7 +200,7 @@ namespace Bootstrap.Controllers
             DateTime date = DateTime.Now;
             TimeSpan ts = new TimeSpan(0, 0, 0, 0);
             DateTime end = date.Date + ts;
-            DateTime start = date.AddDays(-30).Date + ts;
+            DateTime start = date.AddDays(-40).Date + ts;
 
 
             string conString;
@@ -204,7 +259,7 @@ namespace Bootstrap.Controllers
             DateTime date = DateTime.Now;
             TimeSpan ts = new TimeSpan(0, 0, 0, 0);
             DateTime end = date.Date + ts;
-            DateTime start = date.AddDays(-30).Date + ts;
+            DateTime start = date.AddDays(-40).Date + ts;
 
 
             string conString;
@@ -262,7 +317,7 @@ namespace Bootstrap.Controllers
             DateTime date = DateTime.Now;
             TimeSpan ts = new TimeSpan(0, 0, 0, 0);
             DateTime end = date.Date + ts;
-            DateTime start = date.AddDays(-30).Date + ts;
+            DateTime start = date.AddDays(-40).Date + ts;
 
 
             string conString;
@@ -320,7 +375,7 @@ namespace Bootstrap.Controllers
             DateTime date = DateTime.Now;
             TimeSpan ts = new TimeSpan(0, 0, 0, 0);
             DateTime end = date.Date + ts;
-            DateTime start = date.AddDays(-30).Date + ts;
+            DateTime start = date.AddDays(-40).Date + ts;
 
 
             string conString;
@@ -378,7 +433,7 @@ namespace Bootstrap.Controllers
             DateTime date = DateTime.Now;
             TimeSpan ts = new TimeSpan(0, 0, 0, 0);
             DateTime end = date.Date + ts;
-            DateTime start = date.AddDays(-30).Date + ts;
+            DateTime start = date.AddDays(-40).Date + ts;
 
 
             string conString;

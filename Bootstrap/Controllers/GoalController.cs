@@ -131,6 +131,17 @@ namespace Bootstrap.Controllers
                 sqlConnection.Close();
             }
 
+            double average = Double.Parse(cols);
+            if (field == "CalGoal" || field == "DistGoal")
+            {
+                average = Math.Round(average, 2);
+            }
+            else
+            {
+                average = Math.Round(average, 0);
+            }
+            cols = "" + average;
+
             return cols;
         }
 
