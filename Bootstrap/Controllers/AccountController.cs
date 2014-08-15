@@ -292,6 +292,14 @@ namespace Bootstrap.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut();
+            
+            //reset variables to default on logoff
+            CompanyController.currentTeamNumber = 0;
+            CompanyController.currentCompanyId = "";
+            CompanyController.hasTeam = false;
+            UserController.currentUserID = "";
+            UserController.currentUserName = "";
+
             return RedirectToAction("Index", "Home");
         }
 

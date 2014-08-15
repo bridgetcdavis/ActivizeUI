@@ -116,22 +116,6 @@ namespace Bootstrap.Controllers
             return cols;
         }
 
-        //take this out later
-        public static void updating()
-        {
-            ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
-            if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
-            {
-                throw new Exception("Fatal error: missing connection string in web.config file");
-            }
-            string conString = mySetting.ConnectionString;
-
-            SqlConnection sqlConnection = new SqlConnection(conString);
-            sqlConnection.Open();
-            string query = String.Format("UPDATE [dbo].[UserInfo] SET [deviceId] = {0} WHERE [deviceId] = '2d209176-f8c8-4071-b7cf-46e5c4199511'", GoalController.getID("Beth"));
-            SqlCommand queryCommand = new SqlCommand(query, sqlConnection);
-        }
-
         public static string setUserID(string username)
         {
             currentUserName = username;
@@ -198,97 +182,6 @@ namespace Bootstrap.Controllers
             cols += dataTable.Rows[0][dataTable.Columns[0].ColumnName];
 
             return cols;
-        }
-
-        //is never called
-        public static string getSQLHistory(DateTime? from, DateTime? to, string ns)
-        {
-            DateTime date = DateTime.Now;
-            TimeSpan ts = new TimeSpan(0, 0, 0, 0);
-            DateTime end = date.Date + ts;
-            DateTime start = date.AddDays(-30).Date + ts;
-
-            string conString;
-
-            ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
-            if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
-            {
-                throw new Exception("Fatal error: missing connection string in web.config file");
-            }
-            conString = mySetting.ConnectionString;
-
-            List<NamespaceSQL> sqlResult;
-
-            using (SqlConnection sqlConn = new SqlConnection(conString))
-            {
-                sqlResult = SqlHelpers.RetryExecute<List<NamespaceSQL>>(() =>
-                {
-                    return SqlHelpers.ExecuteSqlCommandWithResults(NamespaceSQL.Initializer,
-                        sqlConn,
-                        SQLsForCustomerQuery,
-                        new SqlParameter("start", start),
-                        new SqlParameter("end", end),
-                        new SqlParameter("namespace", currentUserID));
-                });
-            }
-
-            JArray namespaceTotalStepArray = new JArray();
-            JArray namespaceCaloriesArray = new JArray();
-            JArray namespaceWalkStepArray = new JArray();
-            JArray namespaceRunStepArray = new JArray();
-            JArray namespaceDistanceArray = new JArray();
-            string scaleUnit = string.Empty;
-
-            foreach (NamespaceSQL kpi in sqlResult)
-            {
-                namespaceTotalStepArray.Add(kpi.TotalStep);
-
-                namespaceCaloriesArray.Add(kpi.Calories);
-
-                namespaceRunStepArray.Add(kpi.RunStep);
-
-                namespaceWalkStepArray.Add(kpi.WalkStep);
-
-                namespaceDistanceArray.Add(kpi.Distance);
-            }
-
-            if (sqlResult.Count > 0)
-            {
-                scaleUnit = sqlResult[0].deviceId;
-            }
-
-            JArray SQLsForNameSpace = new JArray();
-
-            JObject namespaceTotalStep = new JObject();
-            namespaceTotalStep["name"] = "TotalStep";
-            namespaceTotalStep["data"] = namespaceTotalStepArray;
-            SQLsForNameSpace.Add(namespaceTotalStep);
-
-            JObject namespaceCalories = new JObject();
-            namespaceCalories["name"] = "Calories";
-            namespaceCalories["data"] = namespaceCaloriesArray;
-            SQLsForNameSpace.Add(namespaceCalories);
-
-            JObject namespaceRunStep = new JObject();
-            namespaceRunStep["name"] = "RunStep";
-            namespaceRunStep["data"] = namespaceRunStepArray;
-            SQLsForNameSpace.Add(namespaceRunStep);
-
-            JObject namespaceWalkStep = new JObject();
-            namespaceWalkStep["name"] = "WalkStep";
-            namespaceWalkStep["data"] = namespaceWalkStepArray;
-            SQLsForNameSpace.Add(namespaceWalkStep);
-
-            JObject namespaceDistance = new JObject();
-            namespaceDistance["name"] = "Distance";
-            namespaceDistance["data"] = namespaceDistanceArray;
-
-            JObject result = new JObject();
-            result["NamespaceName"] = ns;
-            result["ScaleUnit"] = scaleUnit;
-            result["NamespaceSQLs"] = SQLsForNameSpace;
-
-            return result.ToString();
         }
 
         //using string to determine metric yields Internal Server Error. Sticking with separate methods for now.

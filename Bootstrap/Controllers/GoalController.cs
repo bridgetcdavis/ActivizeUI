@@ -158,7 +158,7 @@ namespace Bootstrap.Controllers
 
             SqlConnection sqlConnection = new SqlConnection(conString);
             sqlConnection.Open();
-            string query = String.Format("SELECT [Id] FROM [dbo].[AspNetUsers] WHERE [UserName] = '{0}'", user);
+            string query = String.Format("SELECT [deviceId] FROM [dbo].[UserInfo] WHERE [username] = '{0}'", user);
             string cols = string.Empty;
             SqlCommand queryCommand = new SqlCommand(query, sqlConnection);
             try

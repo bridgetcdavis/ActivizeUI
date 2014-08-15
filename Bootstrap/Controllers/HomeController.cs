@@ -18,14 +18,19 @@ namespace Bootstrap.Controllers
 
         public ActionResult Index()
         {
+            initializeLeaderboard();
+            return View();
+        }
+
+        public void initializeLeaderboard()
+        {
             for (int i = 0; i < 20; i++)
             {
                 for (int j = 0; j < 6; j++)
                 {
-                    leaderboard[i,j] = "";
+                    leaderboard[i, j] = "";
                 }
             }
-            return View();
         }
 
         public ActionResult About()
@@ -49,6 +54,8 @@ namespace Bootstrap.Controllers
 
         public static void getLeaderboard()
         {
+            deleteAverages(); //make sure table is cleared.
+
             ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
             if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
             {
@@ -59,7 +66,7 @@ namespace Bootstrap.Controllers
             SqlConnection sqlConnection = new SqlConnection(conString);
             sqlConnection.Open();
             string query = String.Format("SELECT [timestamp], [companyId], [totalStep], [runStep], [walkStep], [calories], [distance] " +
-                                         "FROM [dbo].[Leaderboard] ORDER BY [timestamp] DESC");
+                                         "FROM [dbo].[Leaderboard] ORDER BY [timestamp] DESC, [totalStep] DESC");
             SqlCommand queryCommand = new SqlCommand(query, sqlConnection);
 
             SqlDataReader queryReader = queryCommand.ExecuteReader();
@@ -73,55 +80,74 @@ namespace Bootstrap.Controllers
             {
                 int count = 0;
                 string company = "";
-                foreach (DataColumn col in dataTable.Columns)
+
+                try
                 {
-                    if (count == 0)
+                    foreach (DataColumn col in dataTable.Columns)
                     {
-                        if (i == 0)
+                        if (count == 0)
                         {
-                            date += dataTable.Rows[i][col.ColumnName];
+                            if (i == 0)
+                            {
+                                date += dataTable.Rows[i][col.ColumnName];
+                            }
+                            else
+                            {
+                                sameDate = (date == "" + dataTable.Rows[i][col.ColumnName]);
+                            }
                         }
-                        else
+                        else if (sameDate)
                         {
-                            sameDate = (date == "" + dataTable.Rows[i][col.ColumnName]);
+                            switch (count)
+                            {
+                                case 1:
+                                    company += dataTable.Rows[i][col.ColumnName];
+                                    break;
+                                case 2:
+                                    totalStep =
+                                        Math.Round(
+                                            Double.Parse("" + dataTable.Rows[i][col.ColumnName])/
+                                            CompanyController.teamNumber(company), 2);
+                                    break;
+                                case 3:
+                                    runStep =
+                                        Math.Round(
+                                            Double.Parse("" + dataTable.Rows[i][col.ColumnName])/
+                                            CompanyController.teamNumber(company), 2);
+                                    break;
+                                case 4:
+                                    walkStep =
+                                        Math.Round(
+                                            Double.Parse("" + dataTable.Rows[i][col.ColumnName])/
+                                            CompanyController.teamNumber(company), 2);
+                                    break;
+                                case 5:
+                                    calories =
+                                        Math.Round(
+                                            Double.Parse("" + dataTable.Rows[i][col.ColumnName])/
+                                            CompanyController.teamNumber(company), 2);
+                                    break;
+                                case 6:
+                                    distance =
+                                        Math.Round(
+                                            Double.Parse("" + dataTable.Rows[i][col.ColumnName])/
+                                            CompanyController.teamNumber(company), 2);
+                                    break;
+                            }
                         }
+                        count++;
                     }
-                    else if (sameDate)
-                    {
-                        switch (count)
-                        {
-                            case 1:
-                                company += dataTable.Rows[i][col.ColumnName];
-                                break;
-                            case 2:
-                                totalStep =
-                                    Math.Round(
-                                        Double.Parse("" + dataTable.Rows[i][col.ColumnName])/CompanyController.teamNumber(company), 2);
-                                break;
-                            case 3:
-                                runStep =
-                                    Math.Round(
-                                        Double.Parse("" + dataTable.Rows[i][col.ColumnName]) / CompanyController.teamNumber(company), 2);
-                                break;
-                            case 4:
-                                walkStep =
-                                    Math.Round(
-                                        Double.Parse("" + dataTable.Rows[i][col.ColumnName]) / CompanyController.teamNumber(company), 2);
-                                break;
-                            case 5:
-                                calories =
-                                    Math.Round(
-                                        Double.Parse("" + dataTable.Rows[i][col.ColumnName]) / CompanyController.teamNumber(company), 2);
-                                break;
-                            case 6:
-                                distance =
-                                    Math.Round(
-                                        Double.Parse("" + dataTable.Rows[i][col.ColumnName]) / CompanyController.teamNumber(company), 2);
-                                break;
-                        }
-                    }
-                    count++;
                 }
+                catch 
+                {
+                    company = "";
+                    totalStep = 0;
+                    runStep = 0;
+                    walkStep = 0;
+                    calories = 0;
+                    distance = 0;
+                }
+                
                 if (sameDate)
                 {
                     SqlConnection sqlConnection2 = new SqlConnection(conString);
@@ -136,7 +162,18 @@ namespace Bootstrap.Controllers
                 
             }
             sqlConnection.Close();
+
             averages();
+        }
+
+        public static void deleteAverages()
+        {
+            ConnectionStringSettings mySetting = ConfigurationManager.ConnectionStrings["DefaultConnection"];
+            if (mySetting == null || string.IsNullOrEmpty(mySetting.ConnectionString))
+            {
+                throw new Exception("Fatal error: missing connection string in web.config file");
+            }
+            string conString = mySetting.ConnectionString;
 
             SqlConnection sqlConnection3 = new SqlConnection(conString);
             sqlConnection3.Open();
@@ -202,6 +239,5 @@ namespace Bootstrap.Controllers
             }
             sqlConnection.Close();
         }
-
     }
 }
